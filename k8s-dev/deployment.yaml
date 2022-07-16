@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: push-notification
+  name: push-notification-worker
+  namespace: ikomida-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: push-notification
+  template:
+    metadata:
+      labels:
+        app: push-notification
+    spec:
+      containers:
+        - image: hub.docker.internal:5000/ikomida/push-notification-worker-image:latest
+          name: push-notification-worker
+          env:
+            - name: ENV
+              value: "DEV"
+            - name: GOOGLEADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: googleAdmin
+                  optional: false
+            - name: DBUSER
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: DBUSER
+            - name: DBPASS
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: DBPASS
+            - name: DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: DBNAME
+            - name: DBHOST
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: DBHOST
+            - name: DBPORT
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: DBPORT
+            - name: MQUSER
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: MQUSER
+            - name: MQPASS
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: MQPASS
+            - name: MQVHOST
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: MQVHOST
+            - name: PROJID
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: PROJID

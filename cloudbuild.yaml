@@ -1,0 +1,45 @@
+steps:
+  - id: dockerBuild
+    name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args:
+      [
+        "-c",
+        'docker build -t us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:$TAG_NAME -t us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:latest . --build-arg GITHUBPRIVATEKEY="$(echo $$GITHUBPRIVATEKEY)"',
+      ]
+    secretEnv: ["GITHUBPRIVATEKEY"]
+
+  - id: k8sApply
+    name: "gcr.io/cloud-builders/kubectl"
+    args: ["apply", "-f", "k8s/"]
+    env:
+      - "CLOUDSDK_COMPUTE_ZONE=us-central1-c"
+      - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-prod-cluster"
+    waitFor:
+      - dockerBuild
+
+  - id: k8sSetImage
+    name: "gcr.io/cloud-builders/kubectl"
+    args:
+      [
+        "set",
+        "image",
+        "deployment",
+        "push-notification-worker",
+        "push-notification-worker=us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:$TAG_NAME",
+      ]
+    env:
+      - "CLOUDSDK_COMPUTE_ZONE=us-central1-c"
+      - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-prod-cluster"
+    waitFor:
+      - k8sApply
+
+images:
+  [
+    "us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:$TAG_NAME",
+    "us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:latest",
+  ]
+availableSecrets:
+  secretManager:
+    - versionName: projects/119948863967/secrets/github-privatekey/versions/1
+      env: "GITHUBPRIVATEKEY"
