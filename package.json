@@ -5,7 +5,8 @@
     "main": "src/worker.mjs",
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
-      "worker": "node src/worker.mjs"
+      "worker": "node src/worker.mjs",
+      "start": "pm2-runtime start process.yml"
     },
     "author": "Khalid Ait Bellahs",
     "license": "UNLICENSED",
