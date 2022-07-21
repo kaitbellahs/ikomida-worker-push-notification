@@ -13,7 +13,7 @@ steps:
     name: "gcr.io/cloud-builders/kubectl"
     args: ["apply", "-f", "k8s/"]
     env:
-      - "CLOUDSDK_COMPUTE_ZONE=us-central1-c"
+      - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
       - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-prod-cluster"
     waitFor:
       - dockerBuild
@@ -29,7 +29,7 @@ steps:
         "push-notification-worker=us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:$TAG_NAME",
       ]
     env:
-      - "CLOUDSDK_COMPUTE_ZONE=us-central1-c"
+      - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
       - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-prod-cluster"
     waitFor:
       - k8sApply
