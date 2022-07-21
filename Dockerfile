@@ -17,7 +17,7 @@ WORKDIR /home/node/app
 COPY --chown=node:node package.json process.yml ./
 COPY --chown=node:node ./src ./src
 
-RUN npm i --omit=dev npm@latest pm2 && npm audit
+RUN npm i --omit=dev npm@latest pm2 && npm update
 
 FROM node:16-alpine AS final
 
