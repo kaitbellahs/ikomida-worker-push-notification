@@ -1,11 +1,11 @@
 steps:
-  - id: dockerBuild
-    name: "gcr.io/cloud-builders/docker"
+  - id: kanikoBuild
+    name: "us-central1-docker.pkg.dev/$PROJECT_ID/docker/kaniko:latest"
     entrypoint: "bash"
     args:
       [
         "-c",
-        'docker build -t us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:$TAG_NAME -t us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:latest . --build-arg GITHUBPRIVATEKEY="$(echo $$GITHUBPRIVATEKEY)"',
+        '/kaniko/executor --destination=us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:$TAG_NAME --destination=us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest --cache=true --cache-ttl=365h --build-arg GITHUBPRIVATEKEY="$(echo $$GITHUBPRIVATEKEY)"',
       ]
     secretEnv: ["GITHUBPRIVATEKEY"]
 
@@ -16,17 +16,19 @@ steps:
       - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
       - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-prod-cluster"
     waitFor:
-      - dockerBuild
+      - kanikoBuild
 
   - id: k8sSetImage
     name: "gcr.io/cloud-builders/kubectl"
     args:
       [
+        "-n",
+        "ikomida-worker",
         "set",
         "image",
         "deployment",
         "push-notification-worker",
-        "push-notification-worker=us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:$TAG_NAME",
+        "push-notification-worker=us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:$TAG_NAME",
       ]
     env:
       - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
@@ -34,12 +36,7 @@ steps:
     waitFor:
       - k8sApply
 
-images:
-  [
-    "us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:$TAG_NAME",
-    "us-central1-docker.pkg.dev/ikomida-prod/ikomida/push-notification-worker-image:latest",
-  ]
 availableSecrets:
   secretManager:
-    - versionName: projects/119948863967/secrets/github-privatekey/versions/1
+    - versionName: projects/981415290588/secrets/github-privatekey/versions/1
       env: "GITHUBPRIVATEKEY"
