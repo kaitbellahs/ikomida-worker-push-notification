@@ -6,7 +6,8 @@ import {
     GoogleAdmin,
     Logger,
     Roles,
-    deepCopy
+    deepCopy,
+    System
 } from 'ikomida-shared'
 import {
     createRequire
@@ -35,7 +36,7 @@ class PushNotificationWorker {
         try {
             this.googleAdmin = new GoogleAdmin(this.logger)
             this.amqp = new RabbitMQ(this.logger)
-            await this.amqp.listenToMessages(RabbitMQ.PUSH_NOTIFICATION_SEVERITY, this.processMessages.bind(this))
+            await this.amqp.listenToMessages(RabbitMQ.PUSH_NOTIFICATION_QUEUE, this.processMessages.bind(this))
         } catch (error) {
             this.logger.error(error)
         }
@@ -49,13 +50,13 @@ class PushNotificationWorker {
                 const contractModel = await SqlDB.ContractModel.findOne({
                     where: {
                         id: messageObject.object.contractId,
-                        
+
                     },
                     include: [{
                         model: SqlDB.PushNotificationModel,
                         where: {
                             role: Roles.VENDOR,
-                            
+
                         },
                         required: false,
                     }]
@@ -72,12 +73,12 @@ class PushNotificationWorker {
                     const userModels = await contractModel.getUsers({
                         where: {
                             id: messageObject.object.userId,
-                            
+
                         },
                         include: [{
                             model: SqlDB.PushNotificationModel,
                             where: {
-                                
+
                             },
                             required: false,
                         }]
@@ -130,7 +131,7 @@ class PushNotificationWorker {
                         }
                         if (i < 3) {
                             seconds += i
-                            await this.sleep(i * 1000)
+                            await System.sleep(i * 1000)
                         }
                     } while (i < 4)
                     this.logger.log(` [Erro]: O Push notification não foi enviado apos ${i} tentativas wm ${(new Date().getTime() - seconds) / 1000} segundos!`)
@@ -161,10 +162,6 @@ class PushNotificationWorker {
             return false
         }
         return true
-    }
-
-    async sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms))
     }
 }
 
