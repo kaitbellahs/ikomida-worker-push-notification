@@ -53,7 +53,7 @@ class PushNotificationWorker {
 
                     },
                     include: [{
-                        model: SqlDB.PushNotificationModel,
+                        model: SqlDB.PNModel,
                         where: {
                             role: Roles.VENDOR,
 
@@ -67,7 +67,7 @@ class PushNotificationWorker {
                     this.logger.log(` [Erro]: Não foi localizado um estabelecimento!!`)
                     return false
                 }
-                let pushNotificationModel
+                let pNModel
                 let userModel
                 if (messageObject.object.userId) {
                     const userModels = await contractModel.getUsers({
@@ -76,7 +76,7 @@ class PushNotificationWorker {
 
                         },
                         include: [{
-                            model: SqlDB.PushNotificationModel,
+                            model: SqlDB.PNModel,
                             where: {
 
                             },
@@ -89,49 +89,53 @@ class PushNotificationWorker {
                         return false
                     }
                     userModel = userModels?.[0]
-                    pushNotificationModel = userModel?.pushNotification
+                    pNModel = userModel?.pN
                 } else {
-                    const pushNotificationModels = contractModel?.pushNotifications
-                    if ((pushNotificationModels?.length ?? 0) !== 1) {
+                    const pNModels = contractModel?.pNs
+                    if ((pNModels?.length ?? 0) !== 1) {
                         this.logger.log(` [Erro]: foi localizado mais de um push notification token no sistema!`)
                         return false
                     }
-                    pushNotificationModel = pushNotificationModels[0]
+                    pNModel = pNModels[0]
                 }
-                if (pushNotificationModel) {
+                if (pNModel) {
                     const message = deepCopy(messageObject?.object?.message)
-                    const pushNotificationMessageModel = await pushNotificationModel.createPushNotificationMessage({
+                    const pNMessageModel = await pNModel.createPNMessage({
                         title: message?.notification?.title,
                         body: message?.notification?.body,
                         data: JSON.stringify(message?.data)
                     })
 
-                    await pushNotificationMessageModel.setContract(contractModel)
+                    await pNMessageModel.setContract(contractModel)
 
                     if (messageObject.object.userId) {
-                        await pushNotificationMessageModel.setUser(userModel)
+                        await pNMessageModel.setUser(userModel)
                     }
 
                     let i = 1
                     let seconds = new Date().getTime()
                     do {
-                        message.token = pushNotificationModel?.token
+                        message.token = pNModel?.token
                         i++
-                        const response = await this.sendPushNotificationByToken(pushNotificationMessageModel, message)
-                        if (response) {
-                            this.logger.log(` [x] Push notification enviado com sucesso`)
-                            channel.ack(payload)
-                            return true
-                        }
-                        if (response === false) {
-                            this.logger.warn(` [x] Push notification não foi enviado, token não foi localizado`)
-                            pushNotificationModel?.destroy()
-                            channel.ack(payload)
-                            return true
-                        }
-                        if (i < 3) {
-                            seconds += i
-                            await System.sleep(i * 1000)
+                        const response = await this.sendPushNotificationByToken(pNMessageModel, message)
+                        switch (response) {
+                            case 0:
+                                this.logger.log(` [x] Push notification enviado com sucesso`)
+                                channel.ack(payload)
+                                return true
+                            case 1:
+                                this.logger.warn(` [x] Push notification não foi enviado, token não foi localizado`)
+                                pNModel?.destroy()
+                                channel.ack(payload)
+                                return true
+                            case -1:
+                                if (i < 3) {
+                                    seconds += i
+                                    await System.sleep(i * 1000)
+                                }
+                                break
+                            default:
+                                return false
                         }
                     } while (i < 4)
                     this.logger.log(` [Erro]: O Push notification não foi enviado apos ${i} tentativas wm ${(new Date().getTime() - seconds) / 1000} segundos!`)
@@ -148,20 +152,19 @@ class PushNotificationWorker {
     }
 
     async sendPushNotificationByToken(model, payload) {
+        let response = { code: -1 }
         try {
-            const response = await this.googleAdmin.sendPushNotification(payload)
-            if (!response) {
-                return false
+            response = await this.googleAdmin.sendPushNotification(payload)
+            if (response?.code === 0) {
+                model.remoteId = response?.id
+                model.send = true
+                model.save()
             }
-            model.remoteId = response
-            model.send = true
-            model.save()
         } catch (error) {
             this.logger.log("payload:", payload)
             this.logger.error(error)
-            return false
         }
-        return true
+        return response
     }
 }
 
