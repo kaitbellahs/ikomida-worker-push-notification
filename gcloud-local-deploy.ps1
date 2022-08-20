@@ -15,6 +15,5 @@ $env:GITHUBPRIVATEKEY="LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuT
 docker build -t us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:latest . --build-arg GITHUBPRIVATEKEY="$env:GITHUBPRIVATEKEY"  --build-arg NODEENV=devlopment $nocache
 ThrowOnNativeFailure
 docker push us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:latest
-docker pull us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:latest
 kubectl -n ikomida-worker delete deploy push-notification-worker
 kubectl apply -f k8s/deployment.yaml

@@ -112,7 +112,7 @@ class PushNotificationWorker {
                         await pNMessageModel.setUser(userModel)
                     }
 
-                    let i = 1
+                    let i = 0
                     let seconds = new Date().getTime()
                     do {
                         message.token = pNModel?.token
@@ -138,7 +138,7 @@ class PushNotificationWorker {
                                 return false
                         }
                     } while (i < 4)
-                    this.logger.log(` [Erro]: O Push notification não foi enviado apos ${i} tentativas wm ${(new Date().getTime() - seconds) / 1000} segundos!`)
+                    this.logger.log(` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${(new Date().getTime() - seconds) / 1000} segundos!`)
                 } else {
                     this.logger.log(` [Erro]: Não foi possível localizar token do usuário ou dispositivo para o envio de push notification!!`)
                 }
