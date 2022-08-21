@@ -4,6 +4,7 @@ import {
     RabbitMQ,
     SqlDB,
     GoogleAdmin,
+    AppleAPNs,
     Logger,
     Roles,
     deepCopy,
@@ -25,6 +26,7 @@ name = name
 class PushNotificationWorker {
 
     googleAdmin
+    appleAPNs
     amqp
     logger
 
@@ -35,6 +37,7 @@ class PushNotificationWorker {
     async run() {
         try {
             this.googleAdmin = new GoogleAdmin(this.logger)
+            this.appleAPNs = new AppleAPNs(this.logger)
             this.amqp = new RabbitMQ(this.logger)
             await this.amqp.listenToMessages(RabbitMQ.PUSH_NOTIFICATION_QUEUE, this.processMessages.bind(this))
         } catch (error) {
@@ -116,8 +119,11 @@ class PushNotificationWorker {
                     let seconds = new Date().getTime()
                     do {
                         message.token = pNModel?.token
+                        message.id = pNMessageModel?.id
+                        message.priority = 10
+                        message.ikomidaId = contractModel?.ikomidaId
                         i++
-                        const response = await this.sendPushNotificationByToken(pNMessageModel, message)
+                        const response = await this.sendPushNotificationByToken(pNMessageModel, message, pNModel?.platform)
                         switch (response) {
                             case 0:
                                 this.logger.log(` [x] Push notification enviado com sucesso`)
@@ -151,10 +157,14 @@ class PushNotificationWorker {
         return false
     }
 
-    async sendPushNotificationByToken(model, payload) {
+    async sendPushNotificationByToken(model, payload, platform) {
         let response = { code: -1 }
         try {
-            response = await this.googleAdmin.sendPushNotification(payload)
+            if (platform === 'android') {
+                response = await this.googleAdmin.sendPushNotification(payload)
+            } else {
+                response = await this.appleAPNs.sendPushNotification(payload)
+            }
             if (response?.code === 0) {
                 model.remoteId = response?.id
                 model.send = true

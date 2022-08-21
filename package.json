@@ -1,18 +1,17 @@
 {
-    "name": "ikomida-notification-worker",
-    "version": "1.0.0",
-    "description": "ikomida push notification worker",
-    "main": "src/worker.mjs",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "worker": "node src/worker.mjs",
-      "start": "pm2-runtime start process.yml"
-    },
-    "author": "Khalid Ait Bellahs",
-    "license": "UNLICENSED",
-    "dependencies": {
-      "axios": "^0.27.2",
-      "ikomida-shared": "github:TIAltoNivel/ikomida-shared#main"
-    }
+  "name": "ikomida-notification-worker",
+  "version": "1.0.0",
+  "description": "ikomida push notification worker",
+  "main": "src/worker.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "worker": "node src/worker.mjs",
+    "start": "pm2-runtime start process.yml"
+  },
+  "author": "Khalid Ait Bellahs",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "ikomida-shared": "github:TIAltoNivel/ikomida-shared#main"
   }
-  
+}
