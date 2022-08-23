@@ -32,13 +32,13 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: environment
-                  key: ikomidaPrivateKey
+                  key: IKOMIDA_PRIVATEKEY
                   optional: false
             - name: IKOMIDA_PUBLICKEY
               valueFrom:
                 secretKeyRef:
                   name: environment
-                  key: ikomidaPublickey
+                  key: IKOMIDA_PUBLICKEY
                   optional: false
             - name: GOOGLEADMIN
               valueFrom:
@@ -91,3 +91,13 @@ spec:
                 secretKeyRef:
                   name: environment
                   key: PROJID
+            - name: APPLE_APNS
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: APPLE_APNS
+            - name: APPLE_APNS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: APPLE_APNS_KEY
