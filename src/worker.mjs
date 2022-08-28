@@ -131,7 +131,7 @@ class PushNotificationWorker {
                                 return true
                             case 1:
                                 this.logger.warn(` [x] Push notification não foi enviado, token não foi localizado`)
-                                pNModel?.destroy()
+                                await pNModel?.destroy()
                                 channel.ack(payload)
                                 return true
                             case -1:
