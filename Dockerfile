@@ -17,7 +17,7 @@ WORKDIR /home/node/app
 COPY --chown=node:node package.json process.yml ./
 COPY --chown=node:node ./src ./src
 
-RUN yarn add pm2 --prod
+RUN yarn install --prod
 
 FROM node:16-alpine AS final
 
@@ -29,4 +29,5 @@ WORKDIR /home/node/app
 EXPOSE ${PORT}
 
 # ENTRYPOINT ["pm2-runtime", "./process.yml"] 
-ENTRYPOINT ["yarn", "start"] 
+# ENTRYPOINT ["yarn", "start"] 
+ENTRYPOINT ["node", "src/worker.mjs"] 

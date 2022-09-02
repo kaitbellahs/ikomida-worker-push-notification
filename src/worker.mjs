@@ -7,7 +7,6 @@ import {
     AppleAPNs,
     Logger,
     Roles,
-    deepCopy,
     System
 } from 'ikomida-shared'
 import {
@@ -31,7 +30,7 @@ class PushNotificationWorker {
     logger
 
     constructor() {
-        this.logger = Logger.getInstance(name, process.env?.ENV !== 'PROD')
+        this.logger = Logger.getInstance(name)
     }
 
     async run() {
@@ -102,7 +101,7 @@ class PushNotificationWorker {
                     pNModel = pNModels[0]
                 }
                 if (pNModel) {
-                    const message = deepCopy(messageObject?.object?.message)
+                    const message = messageObject?.object?.message
                     const pNMessageModel = await pNModel.createPNMessage({
                         title: message?.notification?.title,
                         body: message?.notification?.body,
