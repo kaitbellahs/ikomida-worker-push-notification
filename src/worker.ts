@@ -1,14 +1,5 @@
-#!/usr/bin/env node
-
-import {
-    RabbitMQ,
-    SqlDB,
-    GoogleAdmin,
-    AppleAPNs,
-    Logger,
-    Roles,
-    System
-} from 'ikomida-shared'
+import { Domain, DBModels, Types, BackendTypes, Utils } from '@ikomida/shared-backend';
+import { Message, Channel } from 'amqplib';
 import {
     createRequire
 } from "module"
@@ -19,45 +10,45 @@ let {
 } = require("../package.json")
 name = name
     .replace(/^(@\S+\/)?(svelte-)?(\S+)/, '$3')
-    .replace(/^\w/, m => m.toUpperCase())
-    .replace(/-\w/g, m => m[1].toUpperCase())
-
+    .replace(/^\w/, (m: string) => m.toUpperCase())
+    .replace(/-\w/g, (m: string[]) => m[1].toUpperCase())
 class PushNotificationWorker {
 
-    googleAdmin
-    appleAPNs
-    amqp
-    logger
+    googleAdmin?: Utils.GoogleAdmin
+    appleAPNs?: Utils.AppleAPNs
+    amqp?: Domain.RabbitMQ
+    logger: Utils.Logger
 
     constructor() {
-        this.logger = Logger.getInstance(name)
+        this.logger = Utils.Logger.getInstance(name)
     }
 
     async run() {
         try {
-            this.googleAdmin = new GoogleAdmin(this.logger)
-            this.appleAPNs = new AppleAPNs(this.logger)
-            this.amqp = new RabbitMQ(this.logger)
-            await this.amqp.listenToMessages(RabbitMQ.PUSH_NOTIFICATION_QUEUE, this.processMessages.bind(this))
-        } catch (error) {
+            this.googleAdmin = new Utils.GoogleAdmin(this.logger)
+            this.appleAPNs = new Utils.AppleAPNs(this.logger)
+            this.amqp = new Domain.RabbitMQ(this.logger)
+            await this.amqp.listenToMessages(Domain.RabbitMQ.PUSH_NOTIFICATION_QUEUE, this.processMessages.bind(this))
+        } catch (error: any) {
             this.logger.error(error)
         }
     }
 
-    async processMessages(payload, channel) {
+    async processMessages(message: Message, channel: Channel) {
         try {
-            this.logger.log(` [x] ${payload.fields.routingKey}: payload received: '${payload.content.toString('utf8')}'`)
-            const messageObject = JSON.parse(payload.content.toString('utf8'))
-            if (messageObject.method === 'send') {
-                const contractModel = await SqlDB.ContractModel.findOne({
+            this.logger.log(` [x] ${message.fields.routingKey}: message received: '${message.content.toString('utf8')}'`)
+            const payload = JSON.parse(message.content.toString('utf8')) as Types.Interfaces.IAMQPPayload<Types.Interfaces.IAMQPPayloadObject>
+            const payloadObject = payload.object as Types.Interfaces.IAMQPPayloadObject
+            if (payload.method === 'send') {
+                const contractModel = await DBModels.ContractModel.findOne({
                     where: {
-                        id: messageObject.object.contractId,
+                        id: payloadObject.contractId,
 
                     },
                     include: [{
-                        model: SqlDB.PNModel,
+                        model: DBModels.PNModel,
                         where: {
-                            role: Roles.VENDOR,
+                            role: BackendTypes.Roles.VENDOR,
 
                         },
                         required: false,
@@ -71,14 +62,14 @@ class PushNotificationWorker {
                 }
                 let pNModel
                 let userModel
-                if (messageObject.object.userId) {
-                    const userModels = await contractModel.getUsers({
+                if (payloadObject.userId) {
+                    const userModels = await contractModel.$get('users', {
                         where: {
-                            id: messageObject.object.userId,
+                            id: payloadObject.userId,
 
                         },
                         include: [{
-                            model: SqlDB.PNModel,
+                            model: DBModels.PNModel,
                             where: {
 
                             },
@@ -98,45 +89,44 @@ class PushNotificationWorker {
                         this.logger.log(` [Erro]: foi localizado mais de um push notification token no sistema!`)
                         return false
                     }
-                    pNModel = pNModels[0]
+                    pNModel = pNModels?.[0]
                 }
                 if (pNModel) {
-                    const message = messageObject?.object?.message
-                    const pNMessageModel = await pNModel.createPNMessage({
-                        title: message?.notification?.title,
-                        body: message?.notification?.body,
-                        data: JSON.stringify(message?.data)
+                    const pNmessage = payloadObject?.message as Types.Interfaces.INotificationPayload
+                    const pNMessageModel = await pNModel.$create('pNMessage', {
+                        title: pNmessage?.notification?.title,
+                        body: pNmessage?.notification?.body,
+                        data: JSON.stringify(pNmessage?.data)
                     })
+                    await contractModel.$add('pNs', pNMessageModel)
 
-                    await pNMessageModel.setContract(contractModel)
-
-                    if (messageObject.object.userId) {
-                        await pNMessageModel.setUser(userModel)
+                    if (payloadObject.userId) {
+                        await userModel?.$add('pNs', pNMessageModel)
                     }
 
                     let i = 0
                     let seconds = new Date().getTime()
                     do {
-                        message.token = pNModel?.token
-                        message.id = pNMessageModel?.id
-                        message.priority = 10
-                        message.ikomidaId = contractModel?.ikomidaId
+                        pNmessage.token = pNModel?.token
+                        pNmessage.id = pNMessageModel?.id
+                        pNmessage.priority = 10
+                        pNmessage.ikomidaId = contractModel?.ikomidaID
                         i++
-                        const response = await this.sendPushNotificationByToken(pNMessageModel, message, pNModel?.platform)
-                        switch (response) {
+                        const response = await this.sendPushNotificationByToken(pNMessageModel, pNmessage, pNModel?.platform)
+                        switch (response?.code) {
                             case 0:
                                 this.logger.log(` [x] Push notification enviado com sucesso`)
-                                channel.ack(payload)
+                                channel.ack(message)
                                 return true
                             case 1:
                                 this.logger.warn(` [x] Push notification não foi enviado, token não foi localizado`)
                                 await pNModel?.destroy()
-                                channel.ack(payload)
+                                channel.ack(message)
                                 return true
                             case -1:
                                 if (i < 3) {
                                     seconds += i
-                                    await System.sleep(i * 1000)
+                                    await Utils.System.sleep(i * 1000)
                                 }
                                 break
                             default:
@@ -148,29 +138,29 @@ class PushNotificationWorker {
                     this.logger.log(` [Erro]: Não foi possível localizar token do usuário ou dispositivo para o envio de push notification!!`)
                 }
             } else {
-                this.logger.log(` [Erro]: O metodo: ${messageObject?.method} não suportado!`)
+                this.logger.log(` [Erro]: O metodo: ${payload?.method} não suportado!`)
             }
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(error)
         }
         return false
     }
 
-    async sendPushNotificationByToken(model, payload, platform) {
-        let response = { code: -1 }
+    async sendPushNotificationByToken(model: DBModels.PNMessageModel, message: Types.Interfaces.INotificationPayload, platform?: string) {
+        let response: Types.Types.TSendReturn = { code: -1 }
         try {
             if (platform === 'android') {
-                response = await this.googleAdmin.sendPushNotification(payload)
+                response = await this.googleAdmin?.sendPushNotification(message)
             } else {
-                response = await this.appleAPNs.sendPushNotification(payload)
+                response = await this.appleAPNs?.sendPushNotification(message)
             }
             if (response?.code === 0) {
                 model.remoteId = response?.id
                 model.send = true
                 model.save()
             }
-        } catch (error) {
-            this.logger.log("payload:", payload)
+        } catch (error: any) {
+            this.logger.log("message:", message)
             this.logger.error(error)
         }
         return response

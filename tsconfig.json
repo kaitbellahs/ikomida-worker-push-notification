@@ -1,0 +1,34 @@
+{
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/__tests__/*"
+    ],
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "allowJs": true,
+        "declaration": true,
+        "declarationMap": false,
+        "emitDeclarationOnly": true,
+        "noEmitOnError": true,
+        "esModuleInterop": true,
+        "module": "ESNext",
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "declarationDir": "dist",
+        "strict": true,
+        "target": "ESNext",
+        "sourceMap": true,
+        "removeComments": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    }
+}
