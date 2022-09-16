@@ -1,33 +1,29 @@
-FROM node:16-alpine AS build
+FROM  google/cloud-sdk:alpine AS build
 
-ARG PORT=80
-ARG GITHUBPRIVATEKEY
+ARG GOOGLE_SERVICE_ACCOUNT
+ENV GOOGLE_APPLICATION_CREDENTIALS /service/serviceAccount.json
+
+RUN mkdir -p /service 
+WORKDIR /service
+
+RUN apk update && apk --no-cache -U upgrade && apk add --no-cache yarn npm && echo $GOOGLE_SERVICE_ACCOUNT > /service/serviceAccount_b64 && base64 -d /service/serviceAccount_b64 > $GOOGLE_APPLICATION_CREDENTIALS && gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS 
+
+COPY .npmrc package.json .npmrc .eslintignore .prettierrc api-extractor.json rollup.config.ts tsconfig.json /service/
+COPY ./src /service/src
+
+RUN yarn glogin && yarn install && rm -rf node_modules && yarn install --production
+
+FROM node:16-alpine AS final
 
 ENV NODE_ENV production
 ENV NODEPORT ${PORT}
 
-RUN apk update && apk --no-cache -U upgrade && apk add --no-cache openssh-client git
+RUN apk update && apk --no-cache -U upgrade && addgroup -g 3000  ikomida && deluser --remove-home node && adduser -u 1000 -G ikomida -s /bin/sh -D -h /service ikomida && chown 1000:3000 /service
+USER ikomida
+WORKDIR /service
 
-USER node
+COPY --chown=ikomida:ikomida --from=build /service/package.json ./
+COPY --chown=ikomida:ikomida --from=build /service/node_modules ./node_modules/
+COPY --chown=ikomida:ikomida --from=build /service/dist ./dist/
 
-RUN mkdir -p /home/node/app && chown -R node:node /home/node/app && mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo $GITHUBPRIVATEKEY > ~/.ssh/github_b64 && base64 -d ~/.ssh/github_b64 > ~/.ssh/github && chmod 600 ~/.ssh/github && echo "$(~/.ssh/github)" && ssh-keygen -y -e -f ~/.ssh/github > ~/.ssh/github.pub && echo 'SG9zdCBnaXRodWIuY29tCglIb3N0TmFtZSBnaXRodWIuY29tCglVc2VyIGdpdAoJSWRlbnRpdHlGaWxlIH4vLnNzaC9naXRodWI=' >  ~/.ssh/config_b64 && base64 -d  ~/.ssh/config_b64 > ~/.ssh/config && chmod 600  ~/.ssh/config && echo 'github.com,192.30.253.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==' >  ~/.ssh/known_hosts && chmod 600  ~/.ssh/known_hosts
-
-WORKDIR /home/node/app
-
-COPY --chown=node:node package.json process.yml ./
-COPY --chown=node:node ./src ./src
-
-RUN yarn install --prod
-
-FROM node:16-alpine AS final
-
-RUN apk update && apk --no-cache -U upgrade
-USER node
-COPY --chown=node:node --from=build /home/node/app /home/node/app
-WORKDIR /home/node/app
-
-EXPOSE ${PORT}
-
-# ENTRYPOINT ["pm2-runtime", "./process.yml"] 
-# ENTRYPOINT ["yarn", "start"] 
 ENTRYPOINT ["node", "src/worker.mjs"] 
