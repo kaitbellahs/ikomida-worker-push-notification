@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "description": "ikomida push notification worker",
   "private": true,
-  "module": "dist/worker.mjs",
-  "types": "dist/worker.d.ts",
+  "module": "build/worker.mjs",
+  "types": "build/worker.d.ts",
   "files": [
-    "dist"
+    "build"
   ],
   "type": "module",
   "scripts": {
-    "worker": "node dist/worker.mjs",
+    "worker": "node build/worker.mjs",
     "start": "pm2-runtime start process.yml",
-    "build": "rimraf ./build ./dist ./docs && tsc && rollup -c",
+    "build": "rimraf ./build ./build ./docs && tsc",
     "prebuild:types": "rimraf ./build",
     "build:types": "tsc -p ./tsconfig.json --outDir build && api-extractor run",
     "predoc:jsdoc": "rimraf ./docs",
@@ -21,9 +21,8 @@
     "docs:typedoc": "typedoc src --out docs",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint . --ext .ts --quiet --fix",
-    "clean": "rimraf ./build ./dist ./docs",
+    "clean": "rimraf ./build ./build ./docs",
     "glogin": "artifactregistry-auth",
-    "prepare": "yarn build",
     "prepublishOnly": "yarn lint",
     "preversion": "yarn lint",
     "version": "yarn format && git add -A src",
@@ -32,7 +31,7 @@
   "author": "Khalid Ait Bellahs",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ikomida/shared-backend": "^0.0.107",
+    "@ikomida/shared-backend": "^0.0.177",
     "axios": "^0.27.2"
   },
   "devDependencies": {

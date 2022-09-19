@@ -1,18 +1,18 @@
 {
     "projectFolder": ".",
-    "mainEntryPointFilePath": "<projectFolder>/dist/service.d.ts",
+    "mainEntryPointFilePath": "<projectFolder>/build/service.d.ts",
     "bundledPackages": [],
     "compiler": {
         "tsconfigFilePath": "<projectFolder>/tsconfig.json",
         "overrideTsconfig": {
             "compilerOptions": {
-                "outDir": "dist"
+                "outDir": "build"
             }
         }
     },
     "dtsRollup": {
         "enabled": true,
-        "untrimmedFilePath": "<projectFolder>/dist/service.d.ts"
+        "untrimmedFilePath": "<projectFolder>/build/service.d.ts"
     },
     "apiReport": {
         "enabled": false
