@@ -37,8 +37,8 @@ class PushNotificationWorker {
     async processMessages(message: Message, channel: Channel) {
         try {
             this.logger.log(` [x] ${message.fields.routingKey}: message received: '${message.content.toString('utf8')}'`)
-            const payload = JSON.parse(message.content.toString('utf8')) as Types.Interfaces.IAMQPPayload<Types.Interfaces.IAMQPPayloadObject>
-            const payloadObject = payload.object as Types.Interfaces.IAMQPPayloadObject
+            const payload: Types.Classes.CAMQPPayload<Types.Classes.CAMQPPayloadObject> = Types.Classes.CAMQPPayload.fromObject(JSON.parse(message.content.toString('utf8')))
+            const payloadObject: Types.Classes.CAMQPPayloadObject = Types.Classes.CAMQPPayloadObject.fromObject(payload.object)
             if (payload.method === 'send') {
                 const contractModel = await DBModels.ContractModel.findOne({
                     where: {
@@ -92,7 +92,7 @@ class PushNotificationWorker {
                     pNModel = pNModels?.[0]
                 }
                 if (pNModel) {
-                    const pNmessage = payloadObject?.message as Types.Interfaces.INotificationPayload
+                    const pNmessage = payloadObject?.message as Types.Classes.CNotificationPayload
                     const pNMessageModel = await pNModel.$create('pNMessage', {
                         title: pNmessage?.notification?.title,
                         body: pNmessage?.notification?.body,
@@ -146,7 +146,7 @@ class PushNotificationWorker {
         return false
     }
 
-    async sendPushNotificationByToken(model: DBModels.PNMessageModel, message: Types.Interfaces.INotificationPayload, platform?: string) {
+    async sendPushNotificationByToken(model: DBModels.PNMessageModel, message: Types.Classes.CNotificationPayload, platform?: string) {
         let response: Types.Types.TSendReturn = { code: -1 }
         try {
             if (platform === 'android') {

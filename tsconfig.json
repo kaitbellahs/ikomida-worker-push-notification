@@ -1,10 +1,10 @@
 {
     "include": [
-        "./src/**/*"
+        "src/**/*.ts",
     ],
     "exclude": [
-        "node_modules",
-        "**/__tests__/*"
+        "node_modules/*",
+        "**/*.spec.ts"
     ],
     "compilerOptions": {
         "skipLibCheck": true,
@@ -12,18 +12,17 @@
             "ESNext",
             "DOM"
         ],
-        "allowJs": true,
-        "declaration": true,
+        "allowJs": false,
+        "declaration": false,
         "declarationMap": false,
-        "emitDeclarationOnly": true,
+        "emitDeclarationOnly": false,
         "noEmitOnError": true,
         "esModuleInterop": true,
         "module": "ESNext",
         "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true,
         "moduleResolution": "node",
-        "outDir": "dist",
-        "declarationDir": "dist",
+        "outDir": "build",
         "strict": true,
         "target": "ESNext",
         "sourceMap": true,
