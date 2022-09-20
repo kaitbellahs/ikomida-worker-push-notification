@@ -31,8 +31,8 @@ spec:
             privileged: false
             readOnlyRootFilesystem: true
           env:
-            - name: ENV
-              value: "PROD"
+            - name: NODE_ENV
+              value: "production"
             - name: IKOMIDA_PRIVATEKEY
               valueFrom:
                 secretKeyRef:

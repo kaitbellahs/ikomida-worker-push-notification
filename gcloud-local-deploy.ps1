@@ -23,7 +23,7 @@ ThrowOnNativeFailure
 kubectl -n ikomida-worker delete deploy push-notification-worker
 $prod = $false
 if($args.count -gt 1){
-    $prod=$args[1]==="prod"
+    $prod=$args[1] -eq "prod"
 }
 if($prod){
 kubectl apply -f k8s
