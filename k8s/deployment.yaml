@@ -6,7 +6,7 @@ metadata:
   name: push-notification-worker
   namespace: ikomida-worker
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: push-notification
@@ -30,6 +30,11 @@ spec:
                 - all
             privileged: false
             readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: "20m"
+            limits:
+              cpu: "40m"
           env:
             - name: NODE_ENV
               value: "production"

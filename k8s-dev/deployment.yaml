@@ -15,12 +15,41 @@ spec:
       labels:
         app: push-notification
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+        runAsNonRoot: true
       containers:
-        - image: hub.docker.internal:5000/ikomida/push-notification-worker-image:latest
+        - image: us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:latest
           name: push-notification-worker
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - all
+            privileged: false
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: "20m"
+            limits:
+              cpu: "40m"
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "homologation"
+            - name: IKOMIDA_PRIVATEKEY
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: IKOMIDA_PRIVATEKEY
+                  optional: false
+            - name: IKOMIDA_PUBLICKEY
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: IKOMIDA_PUBLICKEY
+                  optional: false
             - name: GOOGLEADMIN
               valueFrom:
                 secretKeyRef:
