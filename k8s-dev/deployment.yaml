@@ -32,9 +32,10 @@ spec:
             readOnlyRootFilesystem: true
           resources:
             requests:
-              cpu: "20m"
+              cpu: "60m"
+              memory: "100"
             limits:
-              cpu: "40m"
+              cpu: "200m"
           env:
             - name: NODE_ENV
               value: "homologation"
