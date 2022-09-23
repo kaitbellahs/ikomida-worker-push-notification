@@ -16,9 +16,9 @@ yarn glogin
 ThrowOnNativeFailure
 yarn add @ikomida/shared-backend@latest
 ThrowOnNativeFailure
-docker build -t us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$env:GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment $nocache
+docker build -t us-central1-docker.pkg.dev/ikomida-dev/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$env:GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment $nocache
 ThrowOnNativeFailure
-docker push us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:latest
+docker push us-central1-docker.pkg.dev/ikomida-dev/docker/push-notification-worker-image:latest
 ThrowOnNativeFailure
 kubectl -n ikomida-worker delete deploy push-notification-worker
 $prod = $false
