@@ -28,7 +28,7 @@ steps:
         "image",
         "deployment",
         "push-notification-worker",
-        "push-notification-worker=us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:$TAG_NAME",
+        "push-notification-worker=us-central1-docker.pkg.dev/ikomida-dev/docker/push-notification-worker-image:$TAG_NAME",
       ]
     env:
       - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
