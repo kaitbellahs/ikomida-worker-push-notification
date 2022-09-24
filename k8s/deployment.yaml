@@ -21,7 +21,7 @@ spec:
         fsGroup: 2000
         runAsNonRoot: true
       containers:
-        - image: us-central1-docker.pkg.dev/ikomida-prod/docker/push-notification-worker-image:latest
+        - image: us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest
           name: push-notification-worker
           securityContext:
             allowPrivilegeEscalation: false
@@ -32,13 +32,17 @@ spec:
             readOnlyRootFilesystem: true
           resources:
             requests:
-              cpu: "40m"
-              memory: "50"
+              cpu: "18m"
+              memory: "60Mi"
             limits:
               cpu: "150m"
           env:
             - name: NODE_ENV
-              value: "production"
+              valueFrom:
+                secretKeyRef:
+                  name: environment
+                  key: NODE_ENV
+                  optional: false
             - name: IKOMIDA_PRIVATEKEY
               valueFrom:
                 secretKeyRef:

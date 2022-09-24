@@ -1,42 +1,40 @@
 steps:
-  - id: kanikoBuild
-    name: "us-central1-docker.pkg.dev/$PROJECT_ID/docker/kaniko:latest"
+  - id: dockerCache
+    name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args:
       [
         "-c",
-        '/kaniko/executor --destination=us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:$TAG_NAME --destination=us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest --cache=true --cache-ttl=365h --build-arg GITHUBPRIVATEKEY="$(echo $$GITHUBPRIVATEKEY)"',
+        "docker pull us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest || exit 0",
       ]
-    secretEnv: ["GITHUBPRIVATEKEY"]
-
-  - id: k8sApply
-    name: "gcr.io/cloud-builders/kubectl"
-    args: ["apply", "-f", "k8s/"]
-    env:
-      - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
-      - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-prod-cluster"
-    waitFor:
-      - kanikoBuild
-
-  - id: k8sSetImage
-    name: "gcr.io/cloud-builders/kubectl"
+  - id: dockerBuild
+    name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
     args:
       [
-        "-n",
-        "ikomida-worker",
-        "set",
-        "image",
-        "deployment",
-        "push-notification-worker",
-        "push-notification-worker=us-central1-docker.pkg.dev/ikomida-dev/docker/push-notification-worker-image:$TAG_NAME",
+        "-c",
+        'docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:$TAG_NAME -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$(echo $$GOOGLE_SERVICE_ACCOUNT)" --build-arg PROJECT_ID=$(echo $PROJECT_ID) --cache-from us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest',
+      ]
+    secretEnv: ["GOOGLE_SERVICE_ACCOUNT"]
+    waitFor:
+      - dockerCache
+  - id: k8s
+    name: "us-central1-docker.pkg.dev/$PROJECT_ID/docker/k8s"
+    entrypoint: "bash"
+    args:
+      [
+        "-c",
+        "(/builder/kubectl.bash -n ikomida-worker delete deploy push-notification-worker || true)  && for FILE in k8s/*.yaml; do printf \"$(cat $$FILE)\n---\n\" | envsubst; done | /builder/kubectl.bash apply -f -",
       ]
     env:
       - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
-      - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-prod-cluster"
-    waitFor:
-      - k8sApply
-
+      - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-dev-cluster"
+images:
+  [
+    "us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:$TAG_NAME",
+    "us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest",
+  ]
 availableSecrets:
   secretManager:
-    - versionName: projects/981415290588/secrets/github-privatekey/versions/1
-      env: "GITHUBPRIVATEKEY"
+    - versionName: projects/$PROJECT_NUMBER/secrets/google-service-account/versions/1
+      env: "GOOGLE_SERVICE_ACCOUNT"

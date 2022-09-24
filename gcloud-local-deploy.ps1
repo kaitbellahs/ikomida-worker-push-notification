@@ -7,26 +7,27 @@ function ThrowOnNativeFailure {
         throw 'Native Failure'
     }
 }
-$nocache=""
+$projectid="ikomida-dev"
 if($args.count -gt 0){
-    $nocache=$args[0]
+    $projectid=$args[0]
+}
+$nocache=""
+if($args.count -gt 1){
+    $nocache=$args[1]
 }
 $env:GOOGLE_SERVICE_ACCOUNT="REMOVED_GCP_SERVICE_ACCOUNT_KEY"
 yarn glogin
 ThrowOnNativeFailure
 yarn add @ikomida/shared-backend@latest
 ThrowOnNativeFailure
-docker build -t us-central1-docker.pkg.dev/ikomida-dev/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$env:GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment $nocache
+docker build -t us-central1-docker.pkg.dev/$projectid/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$env:GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment --build-arg PROJECT_ID=$projectid $nocache
 ThrowOnNativeFailure
-docker push us-central1-docker.pkg.dev/ikomida-dev/docker/push-notification-worker-image:latest
+docker push us-central1-docker.pkg.dev/$projectid/docker/push-notification-worker-image:latest
 ThrowOnNativeFailure
 kubectl -n ikomida-worker delete deploy push-notification-worker
-$prod = $false
-if($args.count -gt 1){
-    $prod=$args[1] -eq "prod"
-}
-if($prod){
-kubectl apply -f k8s
-}else{
-kubectl apply -f k8s-dev
+
+Get-ChildItem ".\k8s\" -Filter *.yaml | 
+Foreach-Object {
+    $content = Get-Content $_.FullName
+    $content.replace('$PROJECT_ID', $projectid) | kubectl apply -f -
 }
