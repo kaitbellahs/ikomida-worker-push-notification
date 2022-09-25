@@ -31,12 +31,11 @@
   "author": "Khalid Ait Bellahs",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ikomida/shared-backend": "^0.0.224",
+    "@ikomida/shared-backend": "^0.0.228",
     "axios": "^0.27.2"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.31.2",
-    "@rollup/plugin-json": "^4.1.0",
     "@types/amqplib": "^0.8.2",
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
@@ -46,7 +45,7 @@
     "@types/linkify-it": "^3.0.2",
     "@types/luxon": "^3.0.1",
     "@types/morgan": "^1.9.3",
-    "@types/node": "^18.7.18",
+    "@types/node": "^18.7.21",
     "@types/node-mailjet": "^3.3.9",
     "@types/sequelize": "^4.28.14",
     "@types/sharp": "^0.31.0",
@@ -54,7 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "@typescript-eslint/parser": "^5.38.0",
     "chai": "^4.3.6",
-    "eslint": "^8.23.1",
+    "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "google-artifactregistry-auth": "^3.0.2",
     "jsdoc": "^3.6.11",
@@ -62,8 +61,6 @@
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "rollup-plugin-auto-external": "^2.0.0",
-    "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.4.0",
     "typedoc": "^0.23.15",
     "typescript": "^4.8.3"
