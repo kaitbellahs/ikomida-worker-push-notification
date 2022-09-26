@@ -12,7 +12,7 @@ RUN apk update && apk --no-cache -U upgrade && apk add --no-cache npm && npm --g
 COPY package.json .eslintignore .prettierrc api-extractor.json rollup.config.ts tsconfig.json ./
 
 RUN echo "@ikomida:registry=https://us-central1-npm.pkg.dev/$PROJECT_ID/node/" >> .npmrc && echo "//us-central1-npm.pkg.dev/$PROJECT_ID/node/:always-auth=true" >> .npmrc
-RUN yarn glogin && yarn install
+RUN yarn glogin && yarn add @ikomida/shared-backend@latest
 
 COPY ./src /worker/src
 RUN yarn build && yarn install --production
