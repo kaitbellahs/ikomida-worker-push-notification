@@ -13,28 +13,40 @@ steps:
     args:
       [
         "-c",
-        'docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:$TAG_NAME -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$(echo $$GOOGLE_SERVICE_ACCOUNT)" --build-arg PROJECT_ID=$(echo $PROJECT_ID) --cache-from us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest',
+        'docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$(echo $$GOOGLE_SERVICE_ACCOUNT)" --build-arg PROJECT_ID=$(echo $PROJECT_ID) --cache-from us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest',
       ]
     secretEnv: ["GOOGLE_SERVICE_ACCOUNT"]
     waitFor:
       - dockerCache
+  - id: dockerPush
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest",
+      ]
+    waitFor:
+      - dockerBuild
   - id: k8s
     name: "us-central1-docker.pkg.dev/$PROJECT_ID/docker/k8s"
     entrypoint: "bash"
     args:
       [
         "-c",
-        "(/builder/kubectl.bash -n ikomida-worker delete deploy push-notification-worker || true)  && for FILE in k8s/*.yaml; do printf \"$(cat $$FILE)\n---\n\" | envsubst; done | /builder/kubectl.bash apply -f -",
+        "(/builder/kubectl.bash -n ikomida delete deploy push-notification-worker || true) && for FILE in k8s/*.yaml; do printf \"$(cat $$FILE)\n---\n\" | envsubst; done | /builder/kubectl.bash apply -f -",
       ]
     env:
-      - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
-      - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-dev-cluster"
-images:
-  [
-    "us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:$TAG_NAME",
-    "us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest",
-  ]
+      - "PROJECT_ID=$PROJECT_ID"
+      - "CLOUDSDK_COMPUTE_ZONE=us-central1"
+      - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-cluster"
+    waitFor:
+      - dockerPush
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_NUMBER/secrets/google-service-account/versions/1
       env: "GOOGLE_SERVICE_ACCOUNT"
+
+images:
+  [
+    "us-central1-docker.pkg.dev/$PROJECT_ID/docker/push-notification-worker-image:latest",
+  ]
