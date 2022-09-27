@@ -31,7 +31,7 @@
   "author": "Khalid Ait Bellahs",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ikomida/shared-backend": "^0.0.232",
+    "@ikomida/shared-backend": "^0.0.233",
     "axios": "^0.27.2"
   },
   "devDependencies": {

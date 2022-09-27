@@ -37,7 +37,7 @@ steps:
       ]
     env:
       - "PROJECT_ID=$PROJECT_ID"
-      - "CLOUDSDK_COMPUTE_ZONE=us-central1"
+      - "CLOUDSDK_COMPUTE_ZONE=us-central1-b"
       - "CLOUDSDK_CONTAINER_CLUSTER=ikomida-cluster"
     waitFor:
       - dockerPush
