@@ -1,0 +1,60 @@
+name: build and test ikomida apps worker before pull request merge
+on:
+  pull_request:
+    branches:
+      - dev
+      - hmlg
+      - main
+
+env:
+  GCLOUD_LOCATION: us-central1
+
+jobs:
+  build_ikomida:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{ endsWith(github.ref, '/main') && secrets.IKOMIDA_PROD_GCLOUD_SERVICE_ACOUNT || (endsWith(github.ref, '/hmlg') && secrets.IKOMIDA_HMLG_GCLOUD_SERVICE_ACOUNT || secrets.IKOMIDA_DEV_GCLOUD_SERVICE_ACOUNT) }}"
+      - name: Auth npm with artifactregistry and set gcloud project id
+        env:
+          PROJECT_ID: ${{ steps.auth.outputs.project_id }}
+        run: |-
+          echo "Selected gcloud project id: ${PROJECT_ID}"
+          rm .npmrc || true
+          echo "@ikomida:registry=https://${GCLOUD_LOCATION}-npm.pkg.dev/${PROJECT_ID}/node/" >> .npmrc
+          echo "//${GCLOUD_LOCATION}-npm.pkg.dev/${PROJECT_ID}/node/:always-auth=true" >> .npmrc
+          yarn glogin
+      - name: Check service version
+        run: |
+          SERVICE_NAME=$(node --eval="process.stdout.write(require('./package.json').name)")
+          SERVICE_VERSION=$(node --eval="process.stdout.write(require('./package.json').version)")
+          SERVICE_VERSION_REMOTE=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          if { echo "$SERVICE_VERSION"; echo "$SERVICE_VERSION_REMOTE"; } | sort --version-sort --check; then
+              echo "Error: you mast update lib package version"
+              exit 1
+          else
+              echo "Lib package version is correct"
+              exit 0
+          fi
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Prepare code
+        run: |
+          yarn format
+          yarn lint
+      - name: Build code
+        run: yarn build
