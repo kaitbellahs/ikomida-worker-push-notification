@@ -1,0 +1,74 @@
+name: publish ikomida apps worker to artifact registry on pull request merge
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - dev
+      - hmlg
+      - main
+
+env:
+  GCLOUD_LOCATION: us-central1
+  GKE_CLUSTER: ikomida-cluster
+  GKE_ZONE: us-central1-b
+  IMAGE: apps-worker-image
+  TAG: latest
+
+jobs:
+  build_and_deploy_ikomida:
+    if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{ endsWith(github.ref, '/main') && secrets.IKOMIDA_PROD_GCLOUD_SERVICE_ACOUNT || (endsWith(github.ref, '/hmlg') && secrets.IKOMIDA_HMLG_GCLOUD_SERVICE_ACOUNT || secrets.IKOMIDA_DEV_GCLOUD_SERVICE_ACOUNT) }}"
+      - name: Export ENV
+        run: |-
+          DOCKER_IMAGE=${GCLOUD_LOCATION}-docker.pkg.dev/${GCLOUD_PROJECT}/docker/${IMAGE}
+          echo "DOCKER_IMAGE=$(echo $DOCKER_IMAGE)" >> $GITHUB_ENV
+          PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
+          echo "PACKAGE_VERSION=$(echo $PACKAGE_VERSION)" >> $GITHUB_ENV
+          echo "PROJECT_ID=$(echo $GCLOUD_PROJECT)" >> $GITHUB_ENV
+          echo "BASE64_SERVICE_ACCOUNT=$(cat $GOOGLE_APPLICATION_CREDENTIALS | base64 -w 0)" >> $GITHUB_ENV
+      - name: Setup Docker credentials
+        run: |-
+          gcloud auth configure-docker ${GCLOUD_LOCATION}-docker.pkg.dev --project ${GCLOUD_PROJECT}
+      - name: Setup GKE credentials
+        run: |-
+          gcloud container clusters get-credentials "${GKE_CLUSTER}" --zone "${GKE_ZONE}"
+      - id: docker-cache
+        name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - id: Builder
+        name: Create docker builder
+        run: |-
+          docker buildx create --name container --driver docker-container --use | true
+          docker buildx use container
+      - id: build-push
+        name: Build & push docker image
+        run: |-
+          docker buildx build -t "${DOCKER_IMAGE}:${PACKAGE_VERSION}" -t "${DOCKER_IMAGE}:${TAG}" . -o "type=registry" --cache-to "type=local,dest=/tmp/.buildx-cache-new,mode=max" --cache-from "type=local,src=/tmp/.buildx-cache" --build-arg GOOGLE_SERVICE_ACCOUNT="${BASE64_SERVICE_ACCOUNT}" --build-arg PROJECT_ID="${PROJECT_ID}" --builder=container
+      - name: Update branch tag version
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git tag "v${PACKAGE_VERSION}"
+          git push origin "v${PACKAGE_VERSION}"
+      - id: update-docker-cache
+        name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Deploy
+        run: |-
+          kubectl -n ikomida delete deploy apps-worker || true
+          for FILE in k8s/*.yaml; do printf "$(cat $FILE)\n---\n" | envsubst; done | kubectl apply -f -

@@ -1,6 +1,6 @@
 {
     "include": [
-        "src/**/*.ts",
+        "src/**/*.ts"
     ],
     "exclude": [
         "node_modules/*",
@@ -14,7 +14,7 @@
         ],
         "allowJs": false,
         "declaration": true,
-        "declarationMap": false,
+        "declarationMap": true,
         "emitDeclarationOnly": false,
         "noEmitOnError": true,
         "esModuleInterop": true,
@@ -25,7 +25,7 @@
         "outDir": "build",
         "strict": true,
         "target": "ESNext",
-        "sourceMap": false,
+        "sourceMap": true,
         "removeComments": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
