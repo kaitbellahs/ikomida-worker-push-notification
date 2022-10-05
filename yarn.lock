@@ -231,15 +231,15 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ikomida/shared-backend@^0.2.12":
-  version "0.2.12"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-0.2.12.tgz#ecd48f5b783d888fdc3e0feb276797119ec96bb8"
-  integrity sha512-N3/VkjrqSRyn5NLt50ISeKsKpAHZhMhvoD42zaZ92Aeblbc2PoR8mZCUgv/Hu5X5o1Nax3CjiCzw3QVixbcdXw==
+"@ikomida/shared-backend@^0.2.18":
+  version "0.2.18"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-0.2.18.tgz#6979701dd1a7a48ad1c57949e30ab42d2b2c282c"
+  integrity sha512-JpLV7KvIZhj8wPljTnY1I0mUSmbHiCA25bPw0vg0Kv6O1eSlCkhDjRu+ZhXV5DDH5rWnMuqmZjif/iSGzDakpA==
   dependencies:
-    "@ikomida/shared-logics" "^0.1.0"
-    "@ikomida/shared-types" "^0.2.2"
+    "@ikomida/shared-logics" "^0.2.0"
+    "@ikomida/shared-types" "^1.0.3"
     amqplib "^0.10.3"
-    axios "^0.27.2"
+    axios "^1.0.0"
     bcrypt "^5.0.1"
     firebase-admin "^11.0.1"
     jose "^4.10.0"
@@ -247,31 +247,26 @@
     mysql2 "^2.3.3"
     node-mailjet "^5.1.1"
     reflect-metadata "^0.1.13"
-    sequelize "^6.23.2"
+    sequelize "^6.24.0"
     sequelize-typescript "^2.1.3"
     sharp "^0.31.1"
     uuid "^9.0.0"
     xml-js "^1.6.11"
 
-"@ikomida/shared-logics@^0.1.0":
-  version "0.1.0"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-logics/-/@ikomida/shared-logics-0.1.0.tgz#51db029b1b16d72f01aec54059ec9eab6fd37384"
-  integrity sha512-zzrJQpZ9LkFsLUDSWsP+bdTFa0cU7SYnaNphD6bUWdphhS2oDPeNKUTClUYPn+8NIZRjcmC6FsTj7+DlavsJrQ==
+"@ikomida/shared-logics@^0.2.0":
+  version "0.2.0"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-logics/-/@ikomida/shared-logics-0.2.0.tgz#53afdb96bc9e72affef002396fa22eeaf6d19150"
+  integrity sha512-0J49S41iGHA4UlcluRN7MjCxPdicmMUaos7k2N2zh77SeZ/UWebV7XCOUzIkj1yJqnb4bt4XJoqKFSdYiVhVRA==
   dependencies:
-    "@ikomida/shared-types" "^0.1.8"
+    "@ikomida/shared-types" "^1.0.2"
     "@types/uuid" "^8.3.4"
     luxon "^3.0.4"
     uuid "^9.0.0"
 
-"@ikomida/shared-types@^0.1.8":
-  version "0.1.8"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-0.1.8.tgz#e17bb91cc55995204c592ca24c53a3ddbe8c6e55"
-  integrity sha512-eClS8TDi799Q4tcpDOto90vL3zpRKWl91XPeE6785JZHxlCpIlEyiVJQY/woYzXEP3MGdyGQPQWvOBrXm8Oafg==
-
-"@ikomida/shared-types@^0.2.2":
-  version "0.2.2"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-0.2.2.tgz#3a09996849994f82221d00f9fe7bda935dead536"
-  integrity sha512-G4yWWlR0zEHXz4fV128YNeWx3cI3toO6lvHbfijunlv2ddmxLyS8FdM06IL7Z8lKWbv0Sh4leD0NDSfpfVmd8A==
+"@ikomida/shared-types@^1.0.2", "@ikomida/shared-types@^1.0.3":
+  version "1.0.3"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.0.3.tgz#cbf184428f5ef159481af05f47cbaaae4e97366d"
+  integrity sha512-H9C9zP4YZoSvYpq16T1ZRRX7jMWQmcoyJdLIxMWoIboYBBDXjPgnWVOsS3lU0I6+xlXiYoAEx42lmp39shSiVw==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.2"
@@ -968,6 +963,15 @@ axios@^0.27.2:
     follow-redirects "^1.14.9"
     form-data "^4.0.0"
 
+axios@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.0.0.tgz#16ded6096c1d37650db9f6a8d48a2f7c1bb58622"
+  integrity sha512-SsHsGFN1qNPFT5QhSoSD37SHDfGyLSW5AESmyLk2JeCMHv5g0I9g0Hz/zQHx2KNe0jGXh2q2hAm7OdkXm360CA==
+  dependencies:
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -1649,6 +1653,11 @@ follow-redirects@^1.14.9:
   version "1.15.1"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.1.tgz#0ca6a452306c9b276e4d3127483e29575e207ad5"
   integrity sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==
+
+follow-redirects@^1.15.0:
+  version "1.15.2"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
+  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
 form-data@^4.0.0:
   version "4.0.0"
@@ -2947,6 +2956,11 @@ protobufjs@^7.0.0:
     "@types/node" ">=13.7.0"
     long "^5.0.0"
 
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
+  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+
 pseudomap@^1.0.1, pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
@@ -3223,7 +3237,7 @@ sequelize-typescript@^2.1.3:
   dependencies:
     glob "7.2.0"
 
-sequelize@^6.23.2:
+sequelize@^6.24.0:
   version "6.24.0"
   resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.24.0.tgz#ae5c60a54f10c3bdf1c57318a72b224bad306956"
   integrity sha512-mPo7Q7gWkrsstjR2aw8ahkrj8RUJCozz3kedAz2B5ZIdLoQEH1z2tvaeJONI8R6RqeuyRQosx9Yn3s9yQyo6lQ==
