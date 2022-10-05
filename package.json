@@ -1,6 +1,6 @@
 {
   "name": "ikomida-notification-worker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ikomida push notification worker",
   "private": true,
   "module": "build/worker.js",
@@ -26,7 +26,7 @@
   "author": "Khalid Ait Bellahs",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ikomida/shared-backend": "^0.2.12"
+    "@ikomida/shared-backend": "^0.2.18"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.32.0",
