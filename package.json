@@ -1,6 +1,6 @@
 {
   "name": "ikomida-notification-worker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ikomida push notification worker",
   "private": true,
   "module": "build/worker.js",
@@ -27,9 +27,10 @@
   "author": "Khalid Ait Bellahs",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ikomida/shared-backend": "^1.0.7"
+    "@ikomida/shared-backend": "^1.0.9"
   },
   "devDependencies": {
+    "@firebase/app-types": "0.x",
     "@microsoft/api-extractor": "^7.33.0",
     "@rollup/plugin-json": "^5.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
@@ -43,6 +44,8 @@
     "@types/node-mailjet": "^3.3.9",
     "@types/sequelize": "^4.28.14",
     "@types/sharp": "^0.31.0",
+    "@types/uuid": "^8.3.4",
+    "@types/validator": "^13.7.7",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "chai": "^4.3.6",
