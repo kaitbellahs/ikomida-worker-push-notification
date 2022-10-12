@@ -89,17 +89,16 @@ class PushNotificationWorker {
           pNModel = pNModels?.[0]
         }
         if (pNModel) {
-          const pNmessage = payloadObject?.message as Types.Classes.CNotificationPayload
+          const pNmessage: Types.Classes.CNotificationPayload = Types.Classes.CNotificationPayload.fromObject(
+            payloadObject.message
+          )
           const pNMessageModel = await pNModel.$create('pNMessage', {
             title: pNmessage?.notification?.title,
-            body: pNmessage?.notification?.body,
-            data: JSON.stringify(pNmessage?.data)
+            body: pNmessage.notification?.body,
+            data: pNmessage.data,
+            contractId: contractModel.id,
+            userId: userModel?.id
           })
-          await contractModel.$add('pNs', pNMessageModel)
-
-          if (payloadObject.userId) {
-            await userModel?.$add('pNs', pNMessageModel)
-          }
 
           let i = 0
           let seconds = new Date().getTime()
@@ -173,7 +172,7 @@ class PushNotificationWorker {
         model.save()
       }
     } catch (error: any) {
-      this.logger.log('message:', message)
+      this.logger.log('sendPushNotificationByToken:', message)
       this.logger.error(error)
     }
     return response
