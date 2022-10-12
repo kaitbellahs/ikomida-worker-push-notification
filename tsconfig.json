@@ -24,7 +24,7 @@
         "moduleResolution": "node",
         "outDir": "build",
         "strict": true,
-        "target": "ESNext",
+        "target": "ES2021",
         "sourceMap": true,
         "removeComments": true,
         "emitDecoratorMetadata": true,
