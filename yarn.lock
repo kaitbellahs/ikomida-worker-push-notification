@@ -213,13 +213,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ikomida/shared-backend@^1.0.9":
-  version "1.0.9"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.0.9.tgz#beefeb35f9742f66d49b1daf8d1f5ff8987690fe"
-  integrity sha512-FCI2TESsmBxAufFED1AcxG6LSJvqwTWYK/OSqIKn5Bf9HVbfb5C2x95uwEx057x5rdYk52jW+CTeeYoOd3OsLg==
+"@ikomida/shared-backend@^1.0.13":
+  version "1.0.13"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.0.13.tgz#f256415b6fa6c0378e1014062bac66833d4d31dd"
+  integrity sha512-aoanW0UjR6Usc681RvBnrjdeTiyfiAQxZ0cX82/zkkS7zxiZQQXu7CC/rqGJH3ny0kY0CVk4AsgBkoKYRi5VZA==
   dependencies:
     "@ikomida/shared-logics" "^0.2.3"
-    "@ikomida/shared-types" "^1.2.2"
+    "@ikomida/shared-types" "^1.2.7"
     amqplib "^0.10.3"
     axios "^1.1.2"
     bcrypt "^5.1.0"
@@ -242,10 +242,10 @@
   dependencies:
     luxon "^3.0.4"
 
-"@ikomida/shared-types@^1.2.2":
-  version "1.2.2"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.2.2.tgz#d79cee78ec11e395b049b8611699dae112d2d07d"
-  integrity sha512-g+7pk73YGukQ1tbwaNjFpRYDNPKJ7DujEOWwrwWg1texGFXuka1U35K7epP0lhvaquqJ9o6f4D3p3zyltVgUcg==
+"@ikomida/shared-types@^1.2.7":
+  version "1.2.7"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.2.7.tgz#485f1d60c74f21c9f19ff8cac68c307aada7746c"
+  integrity sha512-05Coz2+Jbml1/FxDGFWtY/CUZlW7Liy0/nISjGet7GZFl5uWSBz50RZjGzS+Vbs/ufm6w9mgJko/WwObUX0UOQ==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.2"
@@ -302,24 +302,24 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
-"@microsoft/api-extractor-model@7.25.0":
-  version "7.25.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor-model/-/api-extractor-model-7.25.0.tgz#8ae54d98a2c238be2dd38eeba0955d67c6c9f7fd"
-  integrity sha512-iGZrBui+7Sde7Rk8vsfnBSIilJ48wiGNxReb4N1ij8OrWCtjSB8fSVkOxL9oR6El7KowrZN51T8SdTzysLAelQ==
+"@microsoft/api-extractor-model@7.25.1":
+  version "7.25.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor-model/-/api-extractor-model-7.25.1.tgz#be065a816cc83a5aa1b1203a3ac653dd68d62a0d"
+  integrity sha512-AaZ0ohCGLRjWiZviM+0p/DaxgMhbawS183LW2+CSqyEBh6wZks7NjoyhzhibAYapS4omnrmv96+0V/2wBvnIZQ==
   dependencies:
     "@microsoft/tsdoc" "0.14.1"
     "@microsoft/tsdoc-config" "~0.16.1"
-    "@rushstack/node-core-library" "3.53.1"
+    "@rushstack/node-core-library" "3.53.2"
 
-"@microsoft/api-extractor@^7.33.0":
-  version "7.33.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.33.0.tgz#31d84afe9afe8592295907450217f54c3e99f3ea"
-  integrity sha512-yf0Kzn1o6fQf/xwwkmOZAXHFbj3q1xvmqvTVltO5lDnESh9Nv5KIaALryxcuf8tbytP2auQmd3C7+Zx5SbmZHg==
+"@microsoft/api-extractor@^7.33.1":
+  version "7.33.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.33.1.tgz#3bfcbe3ce90fe7f3c86deb6d198cd1eadc42ba6a"
+  integrity sha512-FwhBbG4RlV2CqEsps2acIVCZz0evSDwotaJGwPhBvAKMYI9xm0pk2Jpuq6tTn2Xtjg4vPXH7bzJ2dPGl3FzgzQ==
   dependencies:
-    "@microsoft/api-extractor-model" "7.25.0"
+    "@microsoft/api-extractor-model" "7.25.1"
     "@microsoft/tsdoc" "0.14.1"
     "@microsoft/tsdoc-config" "~0.16.1"
-    "@rushstack/node-core-library" "3.53.1"
+    "@rushstack/node-core-library" "3.53.2"
     "@rushstack/rig-package" "0.3.17"
     "@rushstack/ts-command-line" "4.12.5"
     colors "~1.2.1"
@@ -458,10 +458,10 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@rushstack/node-core-library@3.53.1":
-  version "3.53.1"
-  resolved "https://registry.yarnpkg.com/@rushstack/node-core-library/-/node-core-library-3.53.1.tgz#facf5bc0c9b2b87920bad6173338bec73eb73342"
-  integrity sha512-hBpZmYNoyayl5H/SW7qLMIgylZvrf0BHKVA27gX43C7HB6e3AFNKGnj2dN/qKBXCwdhxw9OFYM+Gz5sqT3xeMw==
+"@rushstack/node-core-library@3.53.2":
+  version "3.53.2"
+  resolved "https://registry.yarnpkg.com/@rushstack/node-core-library/-/node-core-library-3.53.2.tgz#f442e121f9e6c8bef9a23b7337e6399ab5c0c579"
+  integrity sha512-FggLe5DQs0X9MNFeJN3/EXwb+8hyZUTEp2i+V1e8r4Va4JgkjBNY0BuEaQI+3DW6S4apV3UtXU3im17MSY00DA==
   dependencies:
     "@types/node" "12.20.24"
     colors "~1.2.1"
@@ -638,10 +638,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.24.tgz#c37ac69cb2948afb4cef95f424fa0037971a9a5c"
   integrity sha512-yxDeaQIAJlMav7fH5AQqPH1u8YIuhYJXYBzxaQ4PifsU0GDO38MSdmEDeRlIxrKbC6NbEaaEHDanWb+y30U8SQ==
 
-"@types/node@^18.8.4":
-  version "18.8.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.8.4.tgz#54be907698f40de8a45770b48486aa3cbd3adff7"
-  integrity sha512-WdlVphvfR/GJCLEMbNA8lJ0lhFNBj4SW3O+O5/cEGw9oYrv0al9zTwuQsq+myDUXgNx2jgBynoVgZ2MMJ6pbow==
+"@types/node@^18.8.5":
+  version "18.8.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.8.5.tgz#6a31f820c1077c3f8ce44f9e203e68a176e8f59e"
+  integrity sha512-Bq7G3AErwe5A/Zki5fdD3O6+0zDChhg671NfPjtIcbtzDNZTv4NPKMRFr7gtYPG7y+B8uTiNK4Ngd9T0FTar6Q==
 
 "@types/qs@*":
   version "6.9.7"
@@ -3211,10 +3211,10 @@ rollup-plugin-terser@^7.0.2:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.0.0.tgz#3e12b7cc4843615c855288c091686256c0a8e09d"
-  integrity sha512-iVomS2lySi4BM2QJb7lGZBjSndUEs6Ip+VDl25jcbM99VI5vWeEitvUSiNQkQkwqEiI4515m5shjyuwPcXS5Dg==
+rollup@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.1.0.tgz#1310c764ee3187cd39d936c85107f4bfb0cae3d7"
+  integrity sha512-GEvr+COcXicr4nuih6mpt2Eydq5lZ72z0RrKx1H4/Q2ouT34OHrIIJ9OUj2sZqUhq7QL8Hp8Q8BoWbjL/6ccRQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
