@@ -110,7 +110,7 @@ class PushNotificationWorker {
           const pNMessageModel = await pNModel.$create('pNMessage', {
             title: pNmessage?.notification?.title,
             body: pNmessage.notification?.body,
-            data: pNmessage.data,
+            data: pNmessage.data?.toJSON(),
             contractId: contractModel.id,
             userId: userModel?.id
           })
@@ -170,9 +170,9 @@ class PushNotificationWorker {
     let response: Types.Types.TSendReturn = { code: -1 }
     try {
       if (platform === 'android') {
-        response = await this.googleAdmin?.sendPushNotification(message)
+        response = await this.googleAdmin?.sendPushNotification(message.toJSON())
       } else {
-        response = await this.appleAPNs?.sendPushNotification(message)
+        response = await this.appleAPNs?.sendPushNotification(message.toJSON())
       }
       if (response?.code === 0) {
         model.remoteId = response?.id
@@ -180,7 +180,7 @@ class PushNotificationWorker {
         model.save()
       }
     } catch (error: any) {
-      this.logger.log('sendPushNotificationByToken:', message)
+      this.logger.log('sendPushNotificationByToken:', message.toJSON())
       this.logger.error(error)
     }
     return response
