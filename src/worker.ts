@@ -42,27 +42,27 @@ class PushNotificationWorker {
       if (payload.method === 'send') {
         const include: Includeable = payloadObject.userId
           ? {
-            model: DBModels.UserModel,
-            where: {
-              id: payloadObject.userId
-            },
-            include: [
-              {
-                model: DBModels.PNModel,
-                required: false
-              }
-            ],
-            required: false
-          }
+              model: DBModels.UserModel,
+              where: {
+                id: payloadObject.userId
+              },
+              include: [
+                {
+                  model: DBModels.PNModel,
+                  required: false
+                }
+              ],
+              required: false
+            }
           : {
-            model: DBModels.PNModel,
-            where: {
-              role: {
-                [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
-              }
-            },
-            required: false
-          }
+              model: DBModels.PNModel,
+              where: {
+                role: {
+                  [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
+                }
+              },
+              required: false
+            }
         const contractModel = await DBModels.ContractModel.findOne({
           where: {
             id: payloadObject.contractId
@@ -146,7 +146,8 @@ class PushNotificationWorker {
             }
           } while (i < 4)
           this.logger.log(
-            ` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${(new Date().getTime() - seconds) / 1000
+            ` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${
+              (new Date().getTime() - seconds) / 1000
             } segundos!`
           )
         }
@@ -170,9 +171,9 @@ class PushNotificationWorker {
     let response: Types.Types.TSendReturn = { code: -1 }
     try {
       if (platform === 'android') {
-        response = await this.googleAdmin?.sendPushNotification(message.toJSON())
+        response = await this.googleAdmin?.sendPushNotification(message)
       } else {
-        response = await this.appleAPNs?.sendPushNotification(message.toJSON())
+        response = await this.appleAPNs?.sendPushNotification(message)
       }
       if (response?.code === 0) {
         model.remoteId = response?.id
