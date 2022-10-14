@@ -30,39 +30,38 @@ class PushNotificationWorker {
   }
 
   async processMessages(message: Message, channel: Channel) {
+    let transaction: Domain.SqlDB.Transaction | undefined = undefined
     try {
       this.logger.log(` [x] ${message.fields.routingKey}: message received: '${message.content.toString('utf8')}'`)
       const payload: Types.Classes.CAMQPPayload<Types.Classes.CAMQPPayloadObject> =
         Types.Classes.CAMQPPayload.fromObject(JSON.parse(message.content.toString('utf8')))
-      console.log('payload:', payload)
       const payloadObject: Types.Classes.CAMQPPayloadObject = Types.Classes.CAMQPPayloadObject.fromObject(
         payload.object
       )
-      console.log('payloadObject:', payloadObject)
       if (payload.method === 'send') {
         const include: Includeable = payloadObject.userId
           ? {
-              model: DBModels.UserModel,
-              where: {
-                id: payloadObject.userId
-              },
-              include: [
-                {
-                  model: DBModels.PNModel,
-                  required: false
-                }
-              ],
-              required: false
-            }
+            model: DBModels.UserModel,
+            where: {
+              id: payloadObject.userId
+            },
+            include: [
+              {
+                model: DBModels.PNModel,
+                required: false
+              }
+            ],
+            required: false
+          }
           : {
-              model: DBModels.PNModel,
-              where: {
-                role: {
-                  [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
-                }
-              },
-              required: false
-            }
+            model: DBModels.PNModel,
+            where: {
+              role: {
+                [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
+              }
+            },
+            required: false
+          }
         const contractModel = await DBModels.ContractModel.findOne({
           where: {
             id: payloadObject.contractId
@@ -99,7 +98,6 @@ class PushNotificationWorker {
         const pNmessage: Types.Classes.CNotificationPayload = Types.Classes.CNotificationPayload.fromObject(
           payloadObject.message
         )
-        console.log('pNmessage:', pNmessage)
         for (const pNModel of pNModels) {
           if (!pNModel) {
             this.logger.log(
@@ -107,25 +105,31 @@ class PushNotificationWorker {
             )
             continue
           }
-          const pNMessageModel = await pNModel.$create('pNMessage', {
-            title: pNmessage?.notification?.title,
-            body: pNmessage.notification?.body,
-            data: pNmessage.data?.toJSON(),
-            contractId: contractModel.id,
-            userId: userModel?.id
-          })
 
           let i = 0
           let seconds = new Date().getTime()
           do {
+            transaction = await Domain.SqlDB.sequelize.transaction({
+              autocommit: false
+            })
+            const pNMessageModel = await pNModel.$create('pNMessage', {
+              title: pNmessage?.notification?.title,
+              body: pNmessage.notification?.body,
+              data: pNmessage.data?.toJSON(),
+              contractId: contractModel.id,
+              userId: userModel?.id
+            },
+              { transaction })
             pNmessage.token = pNModel?.token
             pNmessage.id = pNMessageModel?.id
             pNmessage.priority = 10
             pNmessage.ikomidaId = contractModel.ikomidaID
             i++
-            const response = await this.sendPushNotificationByToken(pNMessageModel, pNmessage, pNModel.platform)
+            const response = await this.sendPushNotificationByToken(pNMessageModel, pNmessage, transaction, pNModel.platform)
             switch (response?.code) {
               case 0:
+                await transaction.commit()
+                transaction = undefined
                 this.logger.log(` [x] Push notification enviado com sucesso`)
                 channel.ack(message)
                 return true
@@ -144,10 +148,11 @@ class PushNotificationWorker {
                 channel.ack(message)
                 return false
             }
+            await transaction.rollback()
+            transaction = undefined
           } while (i < 4)
           this.logger.log(
-            ` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${
-              (new Date().getTime() - seconds) / 1000
+            ` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${(new Date().getTime() - seconds) / 1000
             } segundos!`
           )
         }
@@ -166,6 +171,7 @@ class PushNotificationWorker {
   async sendPushNotificationByToken(
     model: DBModels.PNMessageModel,
     message: Types.Classes.CNotificationPayload,
+    transaction?: Domain.SqlDB.Transaction,
     platform?: string
   ) {
     let response: Types.Types.TSendReturn = { code: -1 }
@@ -178,7 +184,7 @@ class PushNotificationWorker {
       if (response?.code === 0) {
         model.remoteId = response?.id
         model.send = true
-        model.save()
+        await model.save({ transaction })
       }
     } catch (error: any) {
       this.logger.log('sendPushNotificationByToken:', message.toJSON())
