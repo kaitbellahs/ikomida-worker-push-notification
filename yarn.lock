@@ -213,13 +213,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ikomida/shared-backend@^1.0.14":
-  version "1.0.14"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.0.14.tgz#9d8547e41687867f9ffb8ffdc4c9b3d7fd816c57"
-  integrity sha512-VBUciPzR4SFYuVNMvN2ZeV72J6IICdxoNLMBHJWnyuzw+7WujJtYKMeBtcuWPwsQdXDO6qXwEJef+sREUDd7Hg==
+"@ikomida/shared-backend@^1.0.22":
+  version "1.0.22"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.0.22.tgz#2c8bf2aede602cea1ea29940cab09eaebe15d02d"
+  integrity sha512-W0UiirhC5UL3s5KQjD/yojIjBkTzEswZC7MS+bqZ+tGb/CaU1F7T3Tue6gKdO0jALpqCt134AS8i7UAz+m9TCA==
   dependencies:
     "@ikomida/shared-logics" "^0.2.3"
-    "@ikomida/shared-types" "^1.2.7"
+    "@ikomida/shared-types" "^1.2.8"
     amqplib "^0.10.3"
     axios "^1.1.2"
     bcrypt "^5.1.0"
@@ -229,7 +229,7 @@
     mysql2 "^2.3.3"
     node-mailjet "^5.1.1"
     reflect-metadata "^0.1.13"
-    sequelize "^6.25.0"
+    sequelize "^6.25.1"
     sequelize-typescript "^2.1.3"
     sharp "^0.31.1"
     uuid "^9.0.0"
@@ -242,10 +242,10 @@
   dependencies:
     luxon "^3.0.4"
 
-"@ikomida/shared-types@^1.2.7":
-  version "1.2.7"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.2.7.tgz#485f1d60c74f21c9f19ff8cac68c307aada7746c"
-  integrity sha512-05Coz2+Jbml1/FxDGFWtY/CUZlW7Liy0/nISjGet7GZFl5uWSBz50RZjGzS+Vbs/ufm6w9mgJko/WwObUX0UOQ==
+"@ikomida/shared-types@^1.2.8":
+  version "1.2.8"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.2.8.tgz#584f77b04285683002b0f21a2a042b03c3d81b23"
+  integrity sha512-LFDhG6IhvcYT0K+1ubKKi1YXkOSC68DstqOACpgO0klZb1aY8vcGAkiFHpDMOiOzhcz1dbuMuVPQfexIa7wzaA==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.2"
@@ -311,10 +311,10 @@
     "@microsoft/tsdoc-config" "~0.16.1"
     "@rushstack/node-core-library" "3.53.2"
 
-"@microsoft/api-extractor@^7.33.1":
-  version "7.33.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.33.1.tgz#3bfcbe3ce90fe7f3c86deb6d198cd1eadc42ba6a"
-  integrity sha512-FwhBbG4RlV2CqEsps2acIVCZz0evSDwotaJGwPhBvAKMYI9xm0pk2Jpuq6tTn2Xtjg4vPXH7bzJ2dPGl3FzgzQ==
+"@microsoft/api-extractor@^7.33.2":
+  version "7.33.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.33.2.tgz#994fb63a547375e0c4e59b288a0f48dca1d532aa"
+  integrity sha512-OTCOtpQgvvRnxyCAHCPEDXVyJXrj54sGNCltOQaaT1wkTUPmRYo/I8yrCGXiBPUIHOpV3lUnaDJkzQF9dtbNWA==
   dependencies:
     "@microsoft/api-extractor-model" "7.25.1"
     "@microsoft/tsdoc" "0.14.1"
@@ -638,10 +638,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.24.tgz#c37ac69cb2948afb4cef95f424fa0037971a9a5c"
   integrity sha512-yxDeaQIAJlMav7fH5AQqPH1u8YIuhYJXYBzxaQ4PifsU0GDO38MSdmEDeRlIxrKbC6NbEaaEHDanWb+y30U8SQ==
 
-"@types/node@^18.8.5":
-  version "18.8.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.8.5.tgz#6a31f820c1077c3f8ce44f9e203e68a176e8f59e"
-  integrity sha512-Bq7G3AErwe5A/Zki5fdD3O6+0zDChhg671NfPjtIcbtzDNZTv4NPKMRFr7gtYPG7y+B8uTiNK4Ngd9T0FTar6Q==
+"@types/node@^18.11.0":
+  version "18.11.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.0.tgz#f38c7139247a1d619f6cc6f27b072606af7c289d"
+  integrity sha512-IOXCvVRToe7e0ny7HpT/X9Rb2RYtElG1a+VshjwT00HxrM2dWBApHQoqsI6WiY7Q03vdf2bCrIGzVrkF/5t10w==
 
 "@types/qs@*":
   version "6.9.7"
@@ -3291,10 +3291,10 @@ sequelize-typescript@^2.1.3:
   dependencies:
     glob "7.2.0"
 
-sequelize@^6.25.0:
-  version "6.25.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.25.0.tgz#957c2c7a90a5fcd544cf92903715593e49002c8b"
-  integrity sha512-Bu2V+Yjw/4fwGve0rwk02jmbuA0JGGGD1N7yrfGQXVRD91hg4j9Ecth4NwnK4fX1MQA4R0Cqfx3BaJDAOoaiSA==
+sequelize@^6.25.1:
+  version "6.25.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.25.1.tgz#bc1af3a3ad441dce5f887f7096ca7d103c09fe5e"
+  integrity sha512-z2oNoGFhQ8FaDLPuL+UKYA4VXsIyd5pHO6LNSRbzIPuOEma8b2bSbLdde6JjeHeaTIrmIwInC7YF34wMHfcngg==
   dependencies:
     "@types/debug" "^4.1.7"
     "@types/validator" "^13.7.1"
