@@ -101,11 +101,6 @@ spec:
                 secretKeyRef:
                   name: environment
                   key: MQVHOST
-            - name: PROJID
-              valueFrom:
-                secretKeyRef:
-                  name: environment
-                  key: PROJID
             - name: APPLE_APNS
               valueFrom:
                 secretKeyRef:
