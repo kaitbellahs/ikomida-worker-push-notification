@@ -41,27 +41,27 @@ class PushNotificationWorker {
       if (payload.method === 'send') {
         const include: Includeable = payloadObject.userId
           ? {
-            model: DBModels.UserModel,
-            where: {
-              id: payloadObject.userId
-            },
-            include: [
-              {
-                model: DBModels.PNModel,
-                required: false
-              }
-            ],
-            required: false
-          }
+              model: DBModels.UserModel,
+              where: {
+                id: payloadObject.userId
+              },
+              include: [
+                {
+                  model: DBModels.PNModel,
+                  required: false
+                }
+              ],
+              required: false
+            }
           : {
-            model: DBModels.PNModel,
-            where: {
-              role: {
-                [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
-              }
-            },
-            required: false
-          }
+              model: DBModels.PNModel,
+              where: {
+                role: {
+                  [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
+                }
+              },
+              required: false
+            }
         const contractModel = await DBModels.ContractModel.findOne({
           where: {
             id: payloadObject.contractId
@@ -112,20 +112,28 @@ class PushNotificationWorker {
             transaction = await Domain.SqlDB.sequelize.transaction({
               autocommit: false
             })
-            const pNMessageModel = await pNModel.$create('pNMessage', {
-              title: pNmessage?.notification?.title,
-              body: pNmessage.notification?.body,
-              data: pNmessage.data?.toJSON(),
-              contractId: contractModel.id,
-              userId: userModel?.id
-            },
-              { transaction })
+            const pNMessageModel = await pNModel.$create(
+              'pNMessage',
+              {
+                title: pNmessage?.notification?.title,
+                body: pNmessage.notification?.body,
+                data: pNmessage.data?.toJSON(),
+                contractId: contractModel.id,
+                userId: userModel?.id
+              },
+              { transaction }
+            )
             pNmessage.token = pNModel?.token
             pNmessage.id = pNMessageModel?.id
             pNmessage.priority = 10
             pNmessage.ikomidaId = contractModel.ikomidaID
             i++
-            const response = await this.sendPushNotificationByToken(pNMessageModel, pNmessage, transaction, pNModel.platform)
+            const response = await this.sendPushNotificationByToken(
+              pNMessageModel,
+              pNmessage,
+              transaction,
+              pNModel.platform
+            )
             switch (response?.code) {
               case 0:
                 await transaction.commit()
@@ -152,7 +160,8 @@ class PushNotificationWorker {
             transaction = undefined
           } while (i < 4)
           this.logger.log(
-            ` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${(new Date().getTime() - seconds) / 1000
+            ` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${
+              (new Date().getTime() - seconds) / 1000
             } segundos!`
           )
         }
@@ -162,9 +171,10 @@ class PushNotificationWorker {
         return false
       }
     } catch (error: any) {
+      channel.nack(message)
       this.logger.error(error)
     }
-    channel.nack(message)
+    channel.ack(message)
     return false
   }
 

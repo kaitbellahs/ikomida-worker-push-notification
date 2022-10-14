@@ -20,7 +20,7 @@ $GCLOUD_LOCATION="us-central1"
 $NAME="push-notification"
 $TYPE="worker"
 $PACKAGE_VERSION="latest"
-# docker buildx build -o type=registry --cache-to=type=registry --cache-from=type=registry --build-arg BUILDKIT_INLINE_CACHE=1 -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/$NAME-$TYPE-image:$PACKAGE_VERSION . --build-arg GOOGLE_SERVICE_ACCOUNT="$env:GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment --build-arg PROJECT_ID=$PROJECT_ID $nocache
+docker buildx build -o type=registry --cache-to=type=registry --cache-from=type=registry --build-arg BUILDKIT_INLINE_CACHE=1 -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/$NAME-$TYPE-image:$PACKAGE_VERSION . --build-arg GOOGLE_SERVICE_ACCOUNT="$env:GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment --build-arg PROJECT_ID=$PROJECT_ID $nocache
 kubectl -n ikomida-worker delete deploy $NAME-$TYPE
 
 Get-ChildItem ".\k8s\" -Filter *.yaml | 
