@@ -1,6 +1,6 @@
 {
   "name": "ikomida-notification-worker",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "ikomida push notification worker",
   "private": true,
   "module": "build/worker.js",
@@ -27,7 +27,7 @@
   "author": "Khalid Ait Bellahs",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ikomida/shared-backend": "^1.0.22"
+    "@ikomida/shared-backend": "^1.0.27"
   },
   "devDependencies": {
     "@firebase/app-types": "0.x",
@@ -57,7 +57,7 @@
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "rollup": "^3.1.0",
+    "rollup": "^3.2.0",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.4.0",
