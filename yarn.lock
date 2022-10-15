@@ -213,10 +213,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ikomida/shared-backend@^1.0.22":
-  version "1.0.22"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.0.22.tgz#2c8bf2aede602cea1ea29940cab09eaebe15d02d"
-  integrity sha512-W0UiirhC5UL3s5KQjD/yojIjBkTzEswZC7MS+bqZ+tGb/CaU1F7T3Tue6gKdO0jALpqCt134AS8i7UAz+m9TCA==
+"@ikomida/shared-backend@^1.0.27":
+  version "1.0.27"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.0.27.tgz#f0a3ca0aeff60bed2c6e25adfe57896bc199f66e"
+  integrity sha512-6aKEoJoYz3jlf1JdR450U3fhfQsOnmy8MB7bIGzlp+aakCtreWnnOAa86fIPB1bWK6ug+K5dUBMUKGmZ5NSk8g==
   dependencies:
     "@ikomida/shared-logics" "^0.2.3"
     "@ikomida/shared-types" "^1.2.8"
@@ -3211,10 +3211,10 @@ rollup-plugin-terser@^7.0.2:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.1.0.tgz#1310c764ee3187cd39d936c85107f4bfb0cae3d7"
-  integrity sha512-GEvr+COcXicr4nuih6mpt2Eydq5lZ72z0RrKx1H4/Q2ouT34OHrIIJ9OUj2sZqUhq7QL8Hp8Q8BoWbjL/6ccRQ==
+rollup@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.2.0.tgz#a6f44074418e55217967c8eca622f9638d396388"
+  integrity sha512-0ZkFPyBNvx717KvC700NoxUD31aEEX675u6INJVAmBgKtQuCL8jmmJCj1b9B/qDSnILAvASVKa7UpGS+FLN6AQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
