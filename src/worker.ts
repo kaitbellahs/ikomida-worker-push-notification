@@ -39,34 +39,29 @@ class PushNotificationWorker {
         payload.object
       )
       if (payload.method === 'send') {
-        const include: Includeable = payloadObject.userId
+        const where = payloadObject.userId
           ? {
-              model: DBModels.UserModel,
-              where: {
-                id: payloadObject.userId
-              },
-              include: [
-                {
-                  model: DBModels.PNModel,
-                  required: false
-                }
-              ],
-              required: false
+            id: payloadObject.userId
+          } : {
+            role: {
+              [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
             }
-          : {
-              model: DBModels.PNModel,
-              where: {
-                role: {
-                  [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
-                }
-              },
-              required: false
-            }
+          }
         const contractModel = await DBModels.ContractModel.findOne({
           where: {
             id: payloadObject.contractId
           },
-          include
+          include: {
+            model: DBModels.UserModel,
+            where,
+            include: [
+              {
+                model: DBModels.PNModel,
+                required: false
+              }
+            ],
+            required: false
+          }
         })
 
         if (!contractModel) {
@@ -74,40 +69,28 @@ class PushNotificationWorker {
           channel.ack(message)
           return false
         }
-        let pNModels
-        let userModel
-        if (payloadObject.userId) {
-          const userModels = contractModel.users
-          if (userModels?.length !== 1) {
-            this.logger.log(` [Erro]: Não foi possível localizar o usuário para o envio de push notification!!`)
-            channel.ack(message)
-            return false
-          }
-          userModel = userModels?.[0]
-          pNModels = [userModel?.pN]
-        } else {
-          pNModels = contractModel.pNs
-        }
-        if (!pNModels) {
-          this.logger.log(
-            ` [Erro]: Não foi possível localizar token do usuário ou dispositivo para o envio de push notification!!`
-          )
+        const userModels = contractModel.users
+        if (!userModels || userModels.length <= 0) {
+          this.logger.log(` [Erro]: Não foi possível localizar o usuários para o envio de push notification!!`)
           channel.ack(message)
           return false
         }
         const pNmessage: Types.Classes.CNotificationPayload = Types.Classes.CNotificationPayload.fromObject(
           payloadObject.message
         )
-        for (const pNModel of pNModels) {
+        for (const userModel of userModels) {
+          const pNModel = userModel.pN
           if (!pNModel) {
             this.logger.log(
               ` [Erro]: Não foi possível localizar token do usuário ou dispositivo para o envio de push notification!!`
             )
+            channel.ack(message)
             continue
           }
 
+          let n = 0
+          const startTime = new Date().getTime()
           let i = 0
-          let seconds = new Date().getTime()
           do {
             transaction = await Domain.SqlDB.sequelize.transaction({
               autocommit: false
@@ -115,18 +98,20 @@ class PushNotificationWorker {
             const pNMessageModel = await pNModel.$create(
               'pNMessage',
               {
-                title: pNmessage?.notification?.title,
+                title: pNmessage.notification?.title,
                 body: pNmessage.notification?.body,
                 data: pNmessage.data?.toJSON(),
                 contractId: contractModel.id,
-                userId: userModel?.id
+                userId: userModel.id
               },
               { transaction }
             )
-            pNmessage.token = pNModel?.token
+            pNmessage.token = pNModel.token
             pNmessage.id = pNMessageModel?.id
             pNmessage.priority = 10
-            pNmessage.ikomidaId = contractModel.ikomidaID
+            if (userModel.role) {
+              pNmessage.ikomidaId = BackendTypes.Roles.isVendor(userModel.role) ? 'com.ikomida.br.vendor' : BackendTypes.Roles.isInternal(userModel.role) ? 'com.ikomida.br.admin' : BackendTypes.Roles.isReseller(userModel.role) ? 'com.ikomida.br.reseller' : contractModel.ikomidaID
+            }
             i++
             const response = await this.sendPushNotificationByToken(
               pNMessageModel,
@@ -143,26 +128,28 @@ class PushNotificationWorker {
                 return true
               case 1:
                 this.logger.warn(` [x] Push notification não foi enviado, token não foi localizado`)
-                await pNModel?.destroy()
+                await transaction.commit()
+                transaction = undefined
+                await pNModel.destroy()
                 channel.ack(message)
                 return true
               case -1:
                 if (i < 3) {
-                  seconds += i
-                  await Utils.System.sleep(i * 1000)
+                  n += i
+                  await Utils.System.sleep(n * 2000)
                 }
                 break
               default:
+                await transaction.commit()
+                transaction = undefined
                 channel.ack(message)
                 return false
             }
             await transaction.rollback()
             transaction = undefined
           } while (i < 4)
-          this.logger.log(
-            ` [Erro]: O Push notification não foi enviado após ${i} tentativas wm ${
-              (new Date().getTime() - seconds) / 1000
-            } segundos!`
+          this.logger.error(
+            `[x] o email não foi enviado após ${i} tentativas em ${(startTime - new Date().getTime()) / 1000}s.`
           )
         }
       } else {

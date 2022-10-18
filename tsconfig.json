@@ -25,7 +25,7 @@
         "outDir": "build",
         "strict": true,
         "useDefineForClassFields": false,
-        "target": "ESNext",
+        "target": "ES2021",
         "sourceMap": true,
         "removeComments": true,
         "emitDecoratorMetadata": true,
