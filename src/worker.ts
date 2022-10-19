@@ -42,7 +42,8 @@ class PushNotificationWorker {
         const where = payloadObject.userId
           ? {
             id: payloadObject.userId
-          } : {
+          }
+          : {
             role: {
               [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
             }
@@ -110,7 +111,13 @@ class PushNotificationWorker {
             pNmessage.id = pNMessageModel?.id
             pNmessage.priority = 10
             if (userModel.role) {
-              pNmessage.ikomidaId = BackendTypes.Roles.isVendor(userModel.role) ? 'com.ikomida.br.vendor' : BackendTypes.Roles.isInternal(userModel.role) ? 'com.ikomida.br.admin' : BackendTypes.Roles.isReseller(userModel.role) ? 'com.ikomida.br.reseller' : contractModel.ikomidaID
+              pNmessage.ikomidaId = BackendTypes.Roles.isVendor(userModel.role)
+                ? 'com.ikomida.br.vendor'
+                : BackendTypes.Roles.isInternal(userModel.role)
+                  ? 'com.ikomida.br.admin'
+                  : BackendTypes.Roles.isReseller(userModel.role)
+                    ? 'com.ikomida.br.reseller'
+                    : contractModel.ikomidaID
             }
             i++
             const response = await this.sendPushNotificationByToken(
@@ -158,6 +165,7 @@ class PushNotificationWorker {
         return false
       }
     } catch (error: any) {
+      await transaction?.rollback()
       channel.nack(message)
       this.logger.error(error)
     }
