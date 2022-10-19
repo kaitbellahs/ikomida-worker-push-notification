@@ -213,13 +213,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ikomida/shared-backend@^1.0.37":
-  version "1.0.37"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.0.37.tgz#331a2faaa929f9107a71b3a78e348362736729cf"
-  integrity sha512-1bOvc5k8C/7bl0c+LFk5F25mPVugP3XLKMtwOPLdB+t4+2TQk4nyWHl0GkxT41cJKpTMXlgD8s9ip0DGQX3zfQ==
+"@ikomida/shared-backend@^1.1.7":
+  version "1.1.7"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.1.7.tgz#dac010733094178cfffb2ea1adc3d8f34349e1fe"
+  integrity sha512-Lnu8CrgRorxHq2TOKKN6tK8Ulk0TJUAjtQzNk/GZCn9iACbrIiThEr73X79fqalGeoqIaWu1VAZ7pxee/qwaUg==
   dependencies:
-    "@ikomida/shared-logics" "^0.2.3"
-    "@ikomida/shared-types" "^1.2.9"
+    "@ikomida/shared-logics" "^1.0.5"
+    "@ikomida/shared-types" "^1.3.4"
     amqplib "^0.10.3"
     axios "^1.1.3"
     bcrypt "^5.1.0"
@@ -229,23 +229,23 @@
     mysql2 "^2.3.3"
     node-mailjet "^5.1.1"
     reflect-metadata "^0.1.13"
-    sequelize "^6.25.2"
+    sequelize "^6.25.3"
     sequelize-typescript "^2.1.5"
     sharp "^0.31.1"
     uuid "^9.0.0"
     xml-js "^1.6.11"
 
-"@ikomida/shared-logics@^0.2.3":
-  version "0.2.3"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-logics/-/@ikomida/shared-logics-0.2.3.tgz#084b2c6a3165b2f518b0cba715b1df7ab431c9b9"
-  integrity sha512-kpaSHvf/cbG7bsmJyLkBxtpmSfN0gir3ZuoC0Q4z0kV8L8DyKNU0YdFdd2tuAqzozh3AW8y9njkhULvw/9ldmg==
+"@ikomida/shared-logics@^1.0.5":
+  version "1.0.5"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-logics/-/@ikomida/shared-logics-1.0.5.tgz#a027c73c397a09af5e96c4c8859b720de33f6ac5"
+  integrity sha512-gu/Q+l8y4vkbdGA+oLJ50fJJCEEpoQHvJBKBKkj2xZuwpkvgTxOEqULnPZB2Ez0hIDbe1AjtTAxrj8FJxtZIHA==
   dependencies:
     luxon "^3.0.4"
 
-"@ikomida/shared-types@^1.2.9":
-  version "1.2.9"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.2.9.tgz#832e226b08d091c784d48b7c70f29328bc69a5ca"
-  integrity sha512-QEwNXAsJ8eRwVj3d+HCB1KwveAQTnahhE1YMVkzZYMQr8NZxPn/jmuv9VEDNsLHnEZ24Z/s6C1HDtUldgg6x4Q==
+"@ikomida/shared-types@^1.3.4":
+  version "1.3.4"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.3.4.tgz#2fb75e427b103691f21fe907c596d1d5e22e428d"
+  integrity sha512-gCCbSCFMZvNgg1FrhDJDRCPxEP8eqBtvhgoWj7bpjNRyOqRLuL5WiLMWqezSyBoId1epP3eCZJNpJbuZfdgbfA==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.2"
@@ -638,10 +638,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.24.tgz#c37ac69cb2948afb4cef95f424fa0037971a9a5c"
   integrity sha512-yxDeaQIAJlMav7fH5AQqPH1u8YIuhYJXYBzxaQ4PifsU0GDO38MSdmEDeRlIxrKbC6NbEaaEHDanWb+y30U8SQ==
 
-"@types/node@^18.11.0":
-  version "18.11.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.0.tgz#f38c7139247a1d619f6cc6f27b072606af7c289d"
-  integrity sha512-IOXCvVRToe7e0ny7HpT/X9Rb2RYtElG1a+VshjwT00HxrM2dWBApHQoqsI6WiY7Q03vdf2bCrIGzVrkF/5t10w==
+"@types/node@^18.11.2":
+  version "18.11.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.2.tgz#c59b7641832531264fda3f1ba610362dc9a7dfc8"
+  integrity sha512-BWN3M23gLO2jVG8g/XHIRFWiiV4/GckeFIqbU/C4V3xpoBBWSMk4OZomouN0wCkfQFPqgZikyLr7DOYDysIkkw==
 
 "@types/qs@*":
   version "6.9.7"
@@ -3211,10 +3211,10 @@ rollup-plugin-terser@^7.0.2:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.2.2.tgz#603fc8939104599c472e5830635f63d344f173b6"
-  integrity sha512-tw8NITEB/A8aa8F+mmIJ7fQ7Abej0R9ugR1ZzsCqb7P8HWVIVdneN69BMTDjhk0qbUsewDSJSDTcVuCTogs8JA==
+rollup@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.2.3.tgz#67d894c981ad50cc811779748e52c05742560c64"
+  integrity sha512-qfadtkY5kl0F5e4dXVdj2D+GtOdifasXHFMiL1SMf9ADQDv5Eti6xReef9FKj+iQPR2pvtqWna57s/PjARY4fg==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -3291,10 +3291,10 @@ sequelize-typescript@^2.1.5:
   dependencies:
     glob "7.2.0"
 
-sequelize@^6.25.2:
-  version "6.25.2"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.25.2.tgz#552ec6964be7490906fd9de392af36b9b756553f"
-  integrity sha512-TDHYBDF61zVnkmYetjSj0H5CbnTiM9PZiMrbMCv1wOqh+cspekBQ0f4Y3/5PI1t0SPW40ogr+BiYpMKK9W1DUw==
+sequelize@^6.25.3:
+  version "6.25.3"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.25.3.tgz#ddbdeb84367a030aef367eeef81859c1557f3144"
+  integrity sha512-sbbvDGft6UfSRdIC0dcZvMxxJYi6g0+IgWvIpTuk6ccEoIyLcr7Sk6nXWwGfkdlDabGeunhhhI4yH8PleVMvtw==
   dependencies:
     "@types/debug" "^4.1.7"
     "@types/validator" "^13.7.1"
