@@ -41,13 +41,13 @@ class PushNotificationWorker {
       if (payload.method === 'send') {
         const where = payloadObject.userId
           ? {
-            id: payloadObject.userId
-          }
-          : {
-            role: {
-              [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
+              id: payloadObject.userId
             }
-          }
+          : {
+              role: {
+                [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
+              }
+            }
         const contractModel = await DBModels.ContractModel.findOne({
           where: {
             id: payloadObject.contractId
@@ -92,6 +92,7 @@ class PushNotificationWorker {
           let n = 0
           const startTime = new Date().getTime()
           let i = 0
+          let doWhile = true
           do {
             transaction = await Domain.SqlDB.sequelize.transaction({
               autocommit: false
@@ -114,10 +115,10 @@ class PushNotificationWorker {
               pNmessage.ikomidaId = BackendTypes.Roles.isVendor(userModel.role)
                 ? 'com.ikomida.br.vendor'
                 : BackendTypes.Roles.isInternal(userModel.role)
-                  ? 'com.ikomida.br.admin'
-                  : BackendTypes.Roles.isReseller(userModel.role)
-                    ? 'com.ikomida.br.reseller'
-                    : contractModel.ikomidaID
+                ? 'com.ikomida.br.admin'
+                : BackendTypes.Roles.isReseller(userModel.role)
+                ? 'com.ikomida.br.reseller'
+                : contractModel.ikomidaID
             }
             i++
             const response = await this.sendPushNotificationByToken(
@@ -132,14 +133,16 @@ class PushNotificationWorker {
                 transaction = undefined
                 this.logger.log(` [x] Push notification enviado com sucesso`)
                 channel.ack(message)
-                return true
+                doWhile = false
+                break
               case 1:
                 this.logger.warn(` [x] Push notification não foi enviado, token não foi localizado`)
                 await transaction.commit()
                 transaction = undefined
                 await pNModel.destroy()
                 channel.ack(message)
-                return true
+                doWhile = false
+                break
               case -1:
                 if (i < 3) {
                   n += i
@@ -150,14 +153,19 @@ class PushNotificationWorker {
                 await transaction.commit()
                 transaction = undefined
                 channel.ack(message)
-                return false
+                doWhile = false
+                break
             }
-            await transaction.rollback()
-            transaction = undefined
-          } while (i < 4)
-          this.logger.error(
-            `[x] o email não foi enviado após ${i} tentativas em ${(startTime - new Date().getTime()) / 1000}s.`
-          )
+            if (doWhile) {
+              await transaction?.rollback()
+              transaction = undefined
+            }
+          } while (doWhile && i <= 4)
+          if (doWhile) {
+            this.logger.error(
+              `[x] o email não foi enviado após ${i} tentativas em ${(startTime - new Date().getTime()) / 1000}s.`
+            )
+          }
         }
       } else {
         this.logger.log(` [Erro]: O metodo: ${payload?.method} não suportado!`)

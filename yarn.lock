@@ -213,18 +213,18 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ikomida/shared-backend@^1.1.7":
-  version "1.1.7"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.1.7.tgz#dac010733094178cfffb2ea1adc3d8f34349e1fe"
-  integrity sha512-Lnu8CrgRorxHq2TOKKN6tK8Ulk0TJUAjtQzNk/GZCn9iACbrIiThEr73X79fqalGeoqIaWu1VAZ7pxee/qwaUg==
+"@ikomida/shared-backend@^1.2.3":
+  version "1.2.3"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-backend/-/@ikomida/shared-backend-1.2.3.tgz#f0fdf986d55a0e234efb131d60fa9d871ecc5374"
+  integrity sha512-wTa85fol6k/3tZq22sjnAisLRIOkX3okc4vbnagsIVHgqOJSKctp6s15fApCVDI96KPtGviw5tAeUIfXlC1JDA==
   dependencies:
-    "@ikomida/shared-logics" "^1.0.5"
-    "@ikomida/shared-types" "^1.3.4"
+    "@ikomida/shared-logics" "^1.0.7"
+    "@ikomida/shared-types" "^1.3.7"
     amqplib "^0.10.3"
     axios "^1.1.3"
     bcrypt "^5.1.0"
     firebase-admin "^11.2.0"
-    jose "^4.10.0"
+    jose "^4.10.3"
     luxon "^3.0.4"
     mysql2 "^2.3.3"
     node-mailjet "^5.1.1"
@@ -235,17 +235,17 @@
     uuid "^9.0.0"
     xml-js "^1.6.11"
 
-"@ikomida/shared-logics@^1.0.5":
-  version "1.0.5"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-logics/-/@ikomida/shared-logics-1.0.5.tgz#a027c73c397a09af5e96c4c8859b720de33f6ac5"
-  integrity sha512-gu/Q+l8y4vkbdGA+oLJ50fJJCEEpoQHvJBKBKkj2xZuwpkvgTxOEqULnPZB2Ez0hIDbe1AjtTAxrj8FJxtZIHA==
+"@ikomida/shared-logics@^1.0.7":
+  version "1.0.7"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-logics/-/@ikomida/shared-logics-1.0.7.tgz#cf7ba40a0e7d5e20d1ff76bfdde31270fe389f3b"
+  integrity sha512-VrYKONfPEIQLn2kMYdc7tyiyZjKVV2o5P7U15uUzArPlkH7eNUHZ1ZHqL7lLzoTRHEx0o7haUfscH9lAsnyoGA==
   dependencies:
     luxon "^3.0.4"
 
-"@ikomida/shared-types@^1.3.4":
-  version "1.3.4"
-  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.3.4.tgz#2fb75e427b103691f21fe907c596d1d5e22e428d"
-  integrity sha512-gCCbSCFMZvNgg1FrhDJDRCPxEP8eqBtvhgoWj7bpjNRyOqRLuL5WiLMWqezSyBoId1epP3eCZJNpJbuZfdgbfA==
+"@ikomida/shared-types@^1.3.7":
+  version "1.3.7"
+  resolved "https://us-central1-npm.pkg.dev/ikomida-dev/node/@ikomida/shared-types/-/@ikomida/shared-types-1.3.7.tgz#1e32e165265feb1ba500346f9ca7562edbdb8d3a"
+  integrity sha512-QzRh0Bkc4CJONQn72eoPD51Eup57+2/H0BFL7Y1lBzYMhHlBRa0o1KBElYkYGrbZ6ByhLKPMV8rkN/C2BbBH7g==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.2"
@@ -638,10 +638,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.24.tgz#c37ac69cb2948afb4cef95f424fa0037971a9a5c"
   integrity sha512-yxDeaQIAJlMav7fH5AQqPH1u8YIuhYJXYBzxaQ4PifsU0GDO38MSdmEDeRlIxrKbC6NbEaaEHDanWb+y30U8SQ==
 
-"@types/node@^18.11.2":
-  version "18.11.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.2.tgz#c59b7641832531264fda3f1ba610362dc9a7dfc8"
-  integrity sha512-BWN3M23gLO2jVG8g/XHIRFWiiV4/GckeFIqbU/C4V3xpoBBWSMk4OZomouN0wCkfQFPqgZikyLr7DOYDysIkkw==
+"@types/node@^18.11.3":
+  version "18.11.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.3.tgz#78a6d7ec962b596fc2d2ec102c4dd3ef073fea6a"
+  integrity sha512-fNjDQzzOsZeKZu5NATgXUPsaFaTxeRgFXoosrHivTl8RGeV733OLawXsGfEk9a8/tySyZUyiZ6E8LcjPFZ2y1A==
 
 "@types/qs@*":
   version "6.9.7"
@@ -2195,10 +2195,10 @@ jose@^2.0.6:
   dependencies:
     "@panva/asn1.js" "^1.0.0"
 
-jose@^4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.10.0.tgz#2e0b7bcc80dd0775f8a4588e55beb9460c37d60a"
-  integrity sha512-KEhB/eLGLomWGPTb+/RNbYsTjIyx03JmbqAyIyiXBuNSa7CmNrJd5ysFhblayzs/e/vbOPMUaLnjHUMhGp4yLw==
+jose@^4.10.3:
+  version "4.10.3"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.10.3.tgz#36ffeae395f14624a99961db6ada957476eccb19"
+  integrity sha512-3S4wQnaoJKSAx9uHSoyf8B/lxjs1qCntHWL6wNFszJazo+FtWe+qD0zVfY0BlqJ5HHK4jcnM98k3BQzVLbzE4g==
 
 js-sdsl@^4.1.4:
   version "4.1.4"
