@@ -26,7 +26,7 @@ jobs:
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v0"
         with:
-          credentials_json: "${{ endsWith(github.ref, '/main') && secrets.IKOMIDA_PROD_GCLOUD_SERVICE_ACOUNT || (endsWith(github.ref, '/hmlg') && secrets.IKOMIDA_HMLG_GCLOUD_SERVICE_ACOUNT || secrets.IKOMIDA_DEV_GCLOUD_SERVICE_ACOUNT) }}"
+          credentials_json: "${{ endsWith(github.base_ref, 'main') && secrets.IKOMIDA_PROD_GCLOUD_SERVICE_ACOUNT || (endsWith(github.base_ref, 'hmlg') && secrets.IKOMIDA_HMLG_GCLOUD_SERVICE_ACOUNT || secrets.IKOMIDA_DEV_GCLOUD_SERVICE_ACOUNT) }}"
       - name: Export ENV
         run: |-
           DOCKER_IMAGE=${GCLOUD_LOCATION}-docker.pkg.dev/${GCLOUD_PROJECT}/docker/${NAME}-${TYPE}-image
@@ -51,6 +51,7 @@ jobs:
         run: |-
           docker buildx build -t "${DOCKER_IMAGE}:${PACKAGE_VERSION}" -t "${DOCKER_IMAGE}:${TAG}" . -o type=registry --cache-to="type=registry,ref=${DOCKER_IMAGE}:cache,mode=max" --cache-from="type=registry,ref=${DOCKER_IMAGE}:cache" --build-arg GOOGLE_SERVICE_ACCOUNT="${BASE64_SERVICE_ACCOUNT}" --build-arg PROJECT_ID="${PROJECT_ID}" --builder=container
       - name: Update branch tag version
+        if: github.base_ref == 'dev'
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"

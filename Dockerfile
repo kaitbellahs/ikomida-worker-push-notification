@@ -11,8 +11,8 @@ RUN apk update && apk --no-cache -U upgrade && apk add --no-cache npm && npm --g
 
 RUN echo "@ikomida:registry=https://us-central1-npm.pkg.dev/$PROJECT_ID/node/" >> .npmrc && echo "//us-central1-npm.pkg.dev/$PROJECT_ID/node/:always-auth=true" >> .npmrc
 
-COPY package.json .eslintignore .prettierrc api-extractor.json rollup.config.js tsconfig.json yarn.lock ./
-RUN yarn glogin && yarn --frozen-lockfile
+COPY package.json .eslintignore .prettierrc api-extractor.json rollup.config.js tsconfig.json ./
+RUN yarn glogin && yarn install
 
 COPY ./src /worker/src
 RUN yarn build && yarn install --production
