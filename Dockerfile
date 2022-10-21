@@ -2,17 +2,17 @@ FROM  google/cloud-sdk:alpine AS build
 
 ARG PROJECT_ID
 ARG GOOGLE_SERVICE_ACCOUNT
-ENV GOOGLE_APPLICATION_CREDENTIALS /worker/workerAccount.json
+ENV GOOGLE_APPLICATION_CREDENTIALS /worker/serviceAccount.json
 
 RUN mkdir -p /worker 
 WORKDIR /worker
 
-RUN apk update && apk --no-cache -U upgrade && apk add --no-cache npm && npm --global i yarn patch-package && echo $GOOGLE_SERVICE_ACCOUNT > /worker/workerAccount_b64 && base64 -d /worker/workerAccount_b64 > $GOOGLE_APPLICATION_CREDENTIALS && gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS && export PATH="$(yarn global bin):$PATH" && yarn global add google-artifactregistry-auth
-
-COPY package.json .eslintignore .prettierrc api-extractor.json rollup.config.ts tsconfig.json ./
+RUN apk update && apk --no-cache -U upgrade && apk add --no-cache npm && npm --global i yarn patch-package && echo $GOOGLE_SERVICE_ACCOUNT > /worker/serviceAccount_b64 && base64 -d /worker/serviceAccount_b64 > $GOOGLE_APPLICATION_CREDENTIALS && gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS && export PATH="$(yarn global bin):$PATH" && yarn global add google-artifactregistry-auth
 
 RUN echo "@ikomida:registry=https://us-central1-npm.pkg.dev/$PROJECT_ID/node/" >> .npmrc && echo "//us-central1-npm.pkg.dev/$PROJECT_ID/node/:always-auth=true" >> .npmrc
-RUN yarn glogin && yarn add @ikomida/shared-backend@latest
+
+COPY package.json .eslintignore .prettierrc api-extractor.json rollup.config.js tsconfig.json ./
+RUN yarn glogin && yarn install
 
 COPY ./src /worker/src
 RUN yarn build && yarn install --production
@@ -29,4 +29,4 @@ COPY --chown=ikomida:ikomida --from=build /worker/package.json ./
 COPY --chown=ikomida:ikomida --from=build /worker/node_modules ./node_modules/
 COPY --chown=ikomida:ikomida --from=build /worker/build ./build/
 
-ENTRYPOINT ["node", "build/worker.js"]
+ENTRYPOINT ["node", "--enable-source-maps", "build/worker.js"]
