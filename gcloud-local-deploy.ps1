@@ -7,27 +7,24 @@ function ThrowOnNativeFailure {
         throw 'Native Failure'
     }
 }
-$projectid="ikomida-dev"
+$PROJECT_ID="ikomida-dev"
 if($args.count -gt 0){
-    $projectid=$args[0]
+    $PROJECT_ID=$args[0]
 }
 $nocache=""
 if($args.count -gt 1){
     $nocache=$args[1]
 }
-$env:GOOGLE_SERVICE_ACCOUNT="REMOVED_GCP_SERVICE_ACCOUNT_KEY"
-yarn glogin
-ThrowOnNativeFailure
-yarn add @ikomida/shared-backend@latest
-ThrowOnNativeFailure
-docker build -t us-central1-docker.pkg.dev/$projectid/docker/push-notification-worker-image:latest . --build-arg GOOGLE_SERVICE_ACCOUNT="$env:GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment --build-arg PROJECT_ID=$projectid $nocache
-ThrowOnNativeFailure
-docker push us-central1-docker.pkg.dev/$projectid/docker/push-notification-worker-image:latest
-ThrowOnNativeFailure
-kubectl -n ikomida-worker delete deploy push-notification-worker
+$GOOGLE_SERVICE_ACCOUNT="REMOVED_GCP_SERVICE_ACCOUNT_KEY"
+$GCLOUD_LOCATION="us-central1"
+$NAME="push-notification"
+$TYPE="worker"
+$PACKAGE_VERSION="latest"
+docker buildx build -o type=registry --cache-to=type=registry --cache-from=type=registry --build-arg BUILDKIT_INLINE_CACHE=1 -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/$NAME-$TYPE-image:$PACKAGE_VERSION . --build-arg GOOGLE_SERVICE_ACCOUNT="$GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment --build-arg PROJECT_ID=$PROJECT_ID $nocache
+kubectl -n ikomida-worker delete deploy $NAME-$TYPE
 
 Get-ChildItem ".\k8s\" -Filter *.yaml | 
 Foreach-Object {
     $content = Get-Content $_.FullName
-    $content.replace('$PROJECT_ID', $projectid) | kubectl apply -f -
+    $content.replace('$PROJECT_ID', $PROJECT_ID).replace('$GCLOUD_LOCATION', $GCLOUD_LOCATION).replace('$NAME', $NAME).replace('$TYPE', $TYPE).replace('$PACKAGE_VERSION', $PACKAGE_VERSION) | kubectl apply -f -
 }
