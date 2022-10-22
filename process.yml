@@ -1,5 +1,0 @@
-apps:
-    - name: ikomida-push-notification-worker
-      script: ./src/worker.mjs
-      exec_mode: cluster
-      instances: max
