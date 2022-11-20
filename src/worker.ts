@@ -45,7 +45,7 @@ class PushNotificationWorker {
             }
           : {
               role: {
-                [Domain.SqlDB.Op.in]: [BackendTypes.Roles.VENDOR, BackendTypes.Roles.STAFF]
+                [Domain.SqlDB.Op.in]: [Types.Types.TRoles.VENDOR, Types.Types.TRoles.STAFF]
               }
             }
         const contractModel = await DBModels.ContractModel.findOne({
@@ -112,11 +112,11 @@ class PushNotificationWorker {
             pNmessage.id = pNMessageModel?.id
             pNmessage.priority = 10
             if (userModel.role) {
-              pNmessage.ikomidaId = BackendTypes.Roles.isVendor(userModel.role)
+              pNmessage.ikomidaId = Types.Types.TRoles.isVendor(userModel.role)
                 ? 'com.ikomida.br.vendor'
-                : BackendTypes.Roles.isInternal(userModel.role)
+                : Types.Types.TRoles.isInternal(userModel.role)
                 ? 'com.ikomida.br.admin'
-                : BackendTypes.Roles.isReseller(userModel.role)
+                : Types.Types.TRoles.isReseller(userModel.role)
                 ? 'com.ikomida.br.reseller'
                 : contractModel.ikomidaID
             }
@@ -163,7 +163,9 @@ class PushNotificationWorker {
           } while (doWhile && i <= 4)
           if (doWhile) {
             this.logger.error(
-              `[x] o email não foi enviado após ${i} tentativas em ${(startTime - new Date().getTime()) / 1000}s.`
+              `[x] Push notification não foi enviado após ${i} tentativas em ${
+                (startTime - new Date().getTime()) / 1000
+              }s.`
             )
           }
         }

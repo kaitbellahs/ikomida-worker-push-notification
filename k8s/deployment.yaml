@@ -32,7 +32,7 @@ spec:
             readOnlyRootFilesystem: true
           resources:
             requests:
-              cpu: "50m"
+              cpu: "$CPU_REQUEST"
               memory: "90Mi"
             limits:
               cpu: "150m"
