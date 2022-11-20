@@ -40,7 +40,13 @@ jobs:
           gcloud auth configure-docker ${GCLOUD_LOCATION}-docker.pkg.dev --project ${GCLOUD_PROJECT}
       - name: Setup GKE credentials
         run: |-
-          gcloud container clusters get-credentials "${GKE_CLUSTER}" --zone "${GKE_ZONE}"
+          BRANCH="${GITHUB_BASE_REF##*/}"
+          if [[ $BRANCH == "hmlg" ]]
+          then
+              gcloud container clusters get-credentials "${GKE_CLUSTER}" --zone "${GCLOUD_LOCATION}"
+          else
+              gcloud container clusters get-credentials "${GKE_CLUSTER}" --zone "${GKE_ZONE}"
+          fi
       - id: Builder
         name: Create docker builder
         run: |-
