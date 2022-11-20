@@ -64,5 +64,8 @@ jobs:
           git tag "v${PACKAGE_VERSION}"
           git push origin "v${PACKAGE_VERSION}"
       - name: Deploy
+        env:
+          CPU_REQUEST: "${{ endsWith(github.base_ref, 'main') && '50m' || (endsWith(github.base_ref, 'hmlg') && '50m' || '18m') }}"
+          MAX_REPLICAS: "${{ endsWith(github.base_ref, 'main') && 2 || (endsWith(github.base_ref, 'hmlg') && 2 || 1) }}"
         run: |-
           for FILE in k8s/*.yaml; do printf "$(cat $FILE)\n---\n" | envsubst; done | kubectl apply -f -
