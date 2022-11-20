@@ -20,11 +20,14 @@ $GCLOUD_LOCATION="us-central1"
 $NAME="push-notification"
 $TYPE="worker"
 $PACKAGE_VERSION="latest"
+$CPU_REQUEST="18m"
+$MAX_REPLICAS=1
 docker buildx build -o type=registry --cache-to=type=registry --cache-from=type=registry --build-arg BUILDKIT_INLINE_CACHE=1 -t us-central1-docker.pkg.dev/$PROJECT_ID/docker/$NAME-$TYPE-image:$PACKAGE_VERSION . --build-arg GOOGLE_SERVICE_ACCOUNT="$GOOGLE_SERVICE_ACCOUNT"  --build-arg NODEENV=devlopment --build-arg PROJECT_ID=$PROJECT_ID $nocache
-kubectl -n ikomida-worker delete deploy $NAME-$TYPE
+ThrowOnNativeFailure
+kubectl -n ikomida delete deploy $NAME-$TYPE
 
 Get-ChildItem ".\k8s\" -Filter *.yaml | 
 Foreach-Object {
     $content = Get-Content $_.FullName
-    $content.replace('$PROJECT_ID', $PROJECT_ID).replace('$GCLOUD_LOCATION', $GCLOUD_LOCATION).replace('$NAME', $NAME).replace('$TYPE', $TYPE).replace('$PACKAGE_VERSION', $PACKAGE_VERSION) | kubectl apply -f -
+    $content.replace('$PROJECT_ID', $PROJECT_ID).replace('$GCLOUD_LOCATION', $GCLOUD_LOCATION).replace('$NAME', $NAME).replace('$TYPE', $TYPE).replace('$PACKAGE_VERSION', $PACKAGE_VERSION).replace('$CPU_REQUEST', $CPU_REQUEST).replace('$MAX_REPLICAS', $MAX_REPLICAS) | kubectl apply -f -
 }
