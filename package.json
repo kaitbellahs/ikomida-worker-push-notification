@@ -25,7 +25,7 @@
     "glogin": "artifactregistry-auth"
   },
   "author": "Khalid Ait Bellahs",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "@ikomida/shared-backend": "^1.5.16",
     "@ikomida/shared-logics": "^1.2.1",
@@ -65,5 +65,9 @@
     "tslib": "^2.4.1",
     "typedoc": "^0.23.21",
     "typescript": "^4.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaitbellahs/ikomida-worker-push-notification.git"
   }
 }
